@@ -1,11 +1,4 @@
-<html>
-    <head>
-        <title> <%= title %></title>
-        <link rel="stylesheet" href="/stylesheets/style.css" />
-    </head>
-
-    <body>
-           <h1><%= title %></h1>
+<%- include ("top.ejs") %>
           
         <p>Preencha os campos abaixo para cadastrar um usuário</p>
         <form action="/new" method="POST">
@@ -180,5 +173,4 @@
         }
        </script>
           
-    </body>
-</html>
+          <%- include("bottom.ejs") %>
