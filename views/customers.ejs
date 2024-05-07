@@ -1,12 +1,12 @@
 <%- include ("top.ejs") %>
-    <p>Welcome to <%= title %></p>
+    <%= qty %>
     <table>
       <p>
        <table>
         <thead>
           <tr>
             <td>Nome </td>
-            <td>Idade </td>
+            <td>CPF </td>
             <td>Região </td>
             <td>UF </td>
             <td>Ações </td>
@@ -15,14 +15,14 @@
         <tbody>
 
           <%
-        users.forEach(item=>{
+          customers.forEach(item=>{
 
           %>
          
           <tr>
            
            <td><a href="/customers/edit/<%= item._id %>"><%= item.name %></a></td> 
-           <td><%= item.age %></td> 
+           <td><%= item.cpf %></td> 
            <td><%= item.city %></td> 
            <td><%= item.uf %></td> 
            <td><a href="/customers/edit/<%= item._id %>"><img src="/images/edit.png" /></a>

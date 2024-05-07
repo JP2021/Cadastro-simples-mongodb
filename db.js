@@ -20,39 +20,39 @@ if(!global.connection)
  
 }  
 
-    function findUsers(){
+    function findCustomers(){
         connectDatabase();
-        return global.connection.collection("users").find({}).toArray();
+        return global.connection.collection("customers").find({}).toArray();
     }
 
     function findUser(id){
         connectDatabase();
         const objectId = new ObjectId(id);
-        return global.connection.collection("users")
+        return global.connection.collection("customers")
         .findOne({_id: objectId});
     }
 
-    function insertUsers(test){
+    function insertCustomers(test){
         connectDatabase();
-        return global.connection.collection("users").insertOne(test);
+        return global.connection.collection("customers").insertOne(test);
     }
 
-    function updateUsers(id, users){
+    function updateCustomers(id, customers){
         connectDatabase();
         const objectId = new ObjectId(id);
        
-        return global.connection.collection("users").
-        updateOne({_id: objectId}, {$set: users});
+        return global.connection.collection("customers").
+        updateOne({_id: objectId}, {$set: customers});
        
     }
 
-    function deleteUsers(id){
+    function deleteCustomers(id){
         connectDatabase();
         const objectId = new ObjectId(id);
-        return global.connection.collection("users").
+        return global.connection.collection("customers").
         deleteOne({_id: objectId});
     }
 
 
-    module.exports = {findUsers,insertUsers,
-         updateUsers, deleteUsers, findUser}
+    module.exports = {findCustomers,insertCustomers,
+         updateCustomers, deleteCustomers, findUser}

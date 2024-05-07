@@ -5,23 +5,23 @@
             <fieldset>
                 <legend>Dados Cadastrais</legend>
                 <p>
-                    Nome: <input type="text" name="name" value="<%= users.name %>"/>
+                    Nome: <input type="text" name="name" value="<%= customers.name %>"/>
                 </p>
                 <p>
-                    Idade: <input type="text" name="age" value="<%= users.age %>"/>
+                    Idade: <input type="text" name="cpf" value="<%= customers.cpf %>"/>
                 </p>
                 <p>
-                    Região: <select id="city" name="city" value="<%= users.city %>" >
+                    Região: <select id="city" name="city" value="<%= customers.city %>" >
                         <option>Selecione uma opção:</option>
                         </select>
                        
-                    <select id="uf" name="uf" value="<%= users.uf %>" onchange="municipios()">
+                    <select id="uf" name="uf" value="<%= customers.uf %>" onchange="municipios()">
                         <option>Selecione uma opção:</option>
                 
                         
                     </select>
                 </p>
-                <input type=text name="id" value="<%= users._id %>" />
+                <input type=text name="id" value="<%= customers._id %>" />
                <br>
                 <p>
                     <input type="submit" value="Salvar" />
@@ -49,10 +49,10 @@
                                                    
 
                     <%
-                        if(users.uf ){
+                        if(customers.uf ){
                             %>
-                            ufsHtml.value = "<%=users.uf %>";
-                            var estado  = "<%=users.uf %>";
+                            ufsHtml.value = "<%=customers.uf %>";
+                            var estado  = "<%=customers.uf %>";
                       
                             <%
                         }
@@ -71,11 +71,11 @@
  const ufsHtml = document.getElementById("uf");
     
 <%
-                if(users.uf){
+                if(customers.uf){
                     %>
-                   ufsHtml.value = "<%=users.uf %>";
+                   ufsHtml.value = "<%=customers.uf %>";
                    console.log(ufsHtml)
-                    var estado  = "<%=users.uf %>";
+                    var estado  = "<%=customers.uf %>";
 
                     <%
                 }
@@ -89,9 +89,9 @@
             const ufsHtml2 = document.getElementById("city");
 
             <%
-                        if(users.city ){
+                        if(customers.city ){
                             %>
-                            ufsHtml2.value = "<%=users.city %>";
+                            ufsHtml2.value = "<%=customers.city %>";
                             console.log(ufsHtml2)
                             
                             <%
@@ -113,9 +113,9 @@
              
 
             <%
-                if(users.city ){
+                if(customers.city ){
                     %>
-                    ufsHtml2.value = "<%=users.city %>";
+                    ufsHtml2.value = "<%=customers.city %>";
                    
                    
               
