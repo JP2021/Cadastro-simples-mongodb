@@ -1,48 +1,20 @@
 <%- include ("top.ejs") %>
-    <p>Welcome to <%= title %></p>
-    <table>
-      <p>
-       <table>
-        <thead>
-          <tr>
-            <td>Nome </td>
-            <td>Idade </td>
-            <td>Região </td>
-            <td>UF </td>
-            <td>Ações </td>
-          </tr>
-        </thead>
-        <tbody>
+<div class="row">
+  <div class="col-2">
+    <a href="/customers" class="btn btn-primary">Gestão de Clientes</a>
 
-          <%
-        users.forEach(item=>{
-
-          %>
-         
-          <tr>
-           
-           <td><a href="/edit/<%= item._id %>"><%= item.name %></a></td> 
-           <td><%= item.age %></td> 
-           <td><%= item.city %></td> 
-           <td><%= item.uf %></td> 
-           <td><a href="/edit/<%= item._id %>"><img src="/images/edit.png" /></a>
-            <a href="/delete/<%= item._id %>
-            "onclick="return confirm('Tem certeza que deseja excluir esse cliente?')"><img src="/images/eraser.png" /></a></td> 
-          
-          </tr>
-          <%
-        })
-        %>
-
-        </tbody>
-       </table>
-      </p>
-      <br>
-      <a href="/new">Cadastrar Novo</a>
+  </div>
+  <div class="col-2">
+    <a href="/users" class="btn btn-primary">Gestão de Usuário</a>
 
     
-    </table>
-   <script>
+  </div>
+  <div class="col-2">
+    <form action="/logout" method="POST">
+    <input type="submit" value="Logout" class="btn btn-primary"/>
+  </form>
     
-   </script>
+  </div>
+</div>
+   
   <%- include("bottom.ejs") %>

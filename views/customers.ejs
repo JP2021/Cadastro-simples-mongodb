@@ -1,0 +1,48 @@
+<%- include ("top.ejs") %>
+    <p>Welcome to <%= title %></p>
+    <table>
+      <p>
+       <table>
+        <thead>
+          <tr>
+            <td>Nome </td>
+            <td>Idade </td>
+            <td>Região </td>
+            <td>UF </td>
+            <td>Ações </td>
+          </tr>
+        </thead>
+        <tbody>
+
+          <%
+        users.forEach(item=>{
+
+          %>
+         
+          <tr>
+           
+           <td><a href="/customers/edit/<%= item._id %>"><%= item.name %></a></td> 
+           <td><%= item.age %></td> 
+           <td><%= item.city %></td> 
+           <td><%= item.uf %></td> 
+           <td><a href="/customers/edit/<%= item._id %>"><img src="/images/edit.png" /></a>
+            <a href="/customers/delete/<%= item._id %>
+            "onclick="return confirm('Tem certeza que deseja excluir esse cliente?')"><img src="/images/eraser.png" /></a></td> 
+          
+          </tr>
+          <%
+        })
+        %>
+
+        </tbody>
+       </table>
+      </p>
+      <br>
+      <a href="/customers/new">Cadastrar Novo</a>
+
+    
+    </table>
+   <script>
+    
+   </script>
+  <%- include("bottom.ejs") %>
