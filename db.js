@@ -9,7 +9,7 @@ if(!global.connection)
         { useUnifiedTopology:true})
         
         .then(connection=>{
-            global.connection = connection.db("test");
+            global.connection = connection.db(process.env.MONGODB_DATABASE);
             console.log("Connected!");
         })
         .catch(error => {

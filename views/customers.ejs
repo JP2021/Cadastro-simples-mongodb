@@ -1,9 +1,11 @@
 <%- include ("top.ejs") %>
-    <%= qty %>
+    <div class="alert alert-info">
+<%= qty %> Clientes Cadastrados
+</div>
     <table>
       <p>
-       <table>
-        <thead>
+       <table class="table table-bordered table-striped table-hover">
+        <thead class="thead-dark">
           <tr>
             <td>Nome </td>
             <td>CPF </td>
@@ -25,9 +27,9 @@
            <td><%= item.cpf %></td> 
            <td><%= item.city %></td> 
            <td><%= item.uf %></td> 
-           <td><a href="/customers/edit/<%= item._id %>"><img src="/images/edit.png" /></a>
-            <a href="/customers/delete/<%= item._id %>
-            "onclick="return confirm('Tem certeza que deseja excluir esse cliente?')"><img src="/images/eraser.png" /></a></td> 
+           <td>
+            <a href="/customers/delete/<%= item._id %>" title="Excluir" class="btn btn-danger"
+            onclick="return confirm('Tem certeza que deseja excluir esse cliente?')"><img src="/images/eraser.png" /></a></td> 
           
           </tr>
           <%
@@ -38,8 +40,18 @@
        </table>
       </p>
       <br>
-      <a href="/customers/new">Cadastrar Novo</a>
-
+     <div class="row">
+      <div class="col-2">
+              <a href="/customers/new" class="btn btn-primary">Cadastrar Novo</a>
+              </div>
+              <div class="col-2">
+                <a href="/" class="btn btn-primary">Index</a>
+                </div>
+                <div class="col-2">
+                  <form action="/logout" method="POST">
+                  <input type="submit" value="Logout" class="btn btn-primary"/>
+                </form>
+</div>
     
     </table>
    <script>

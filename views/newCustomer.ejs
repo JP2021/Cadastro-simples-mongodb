@@ -1,36 +1,59 @@
 <%- include ("top.ejs") %>
           
-        <p>Preencha os campos abaixo para cadastrar um usuário</p>
+        <p>Preencha os campos abaixo para cadastrar ou editar um usuário</p>
+       <div class="col-6" >
         <form action="/customers/new" method="POST">
-            <fieldset>
-                <legend>Dados Cadastrais</legend>
-                <p>
-                    Nome: <input type="text" name="name" value="<%= customers.name %>"/>
-                </p>
-                <p>
-                    Idade: <input type="text" name="cpf" value="<%= customers.cpf %>"/>
-                </p>
-                <p>
-                    Região: <select id="city" name="city" value="<%= customers.city %>" >
+           <div class="row mb-3">
+
+             <div class="form-group">
+
+                <label for="name">Nome</label>
+                <input type="text" name="name" value="<%= customers.name %>" class="form-control"/>
+            </div>
+            </div>
+           <div class="row mb-3">
+            <div class="form-group">
+
+                <label for="cpf">CPF</label>
+                <input type="text" name="cpf" value="<%= customers.cpf %>" class="form-control"/>
+            </div>
+            </div>
+               
+              <div class="row-mb-3">
+                <div class="form-group"> <br>
+                    
+                    Região:</br>
+                    <div class="input-group">
+                    <select id="city" name="city" value="<%= customers.city %>" class="form-control">
                         <option>Selecione uma opção:</option>
                         </select>
                        
-                    <select id="uf" name="uf" value="<%= customers.uf %>" onchange="municipios()">
+                    <select id="uf" name="uf" value="<%= customers.uf %>" onchange="municipios()" class="form-control">
                         <option>Selecione uma opção:</option>
                 
                         
                     </select>
+                    </div>
+                </div>
+                    </div>
                 </p>
-                <input type=text name="id" value="<%= customers._id %>" />
+                <div class="row mb-3">
+                    <div class="form-group">
+                <input type=text name="id" value="<%= customers._id %>" class="form-control"/>
+                </div>
+                </div>
                <br>
-                <p>
-                    <input type="submit" value="Salvar" />
+                <div class="row mb-3">
+                    <div class="form-group">
+                    <input type="submit" value="Salvar" class="btn btn-primary" />
                   
-                    <a href="/customers">Cancelar</a>
-                </p>
+                    <a href="/customers" class="btn btn-secondary">Cancelar </a>
+                    </div>
+                </div>
                 
-            </fieldset>
+        
         </form>
+        </div>
         <script>
             fetch("https://servicodados.ibge.gov.br/api/v1/localidades/estados")
                 .then(response => response.json())
