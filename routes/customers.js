@@ -4,17 +4,7 @@ const router = express.Router();
 const db = require("../db");
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
-  db.findCustomers()
-    .then(customers => {
-      res.render("customers", {title: "Clientes", customers, qty: customers.length});
-      console.log(customers);
-    })
-    .catch(error => {
-      console.log(error);
-      res.render("error", {message: "Não foi possível listar os clientes"})
-    });
-});
+
 
 router.get('/edit/:customersId',(request, response)=>{
   const id = request.params.customersId;
@@ -54,11 +44,21 @@ router.post('/new', (request, response)=>{
   })
 });
 
-router.get('/delete/:userId', (request, response)=>{
-  const id = request.params.userId;
-  db.deleteCustomers(id)
-  .then(result => response.redirect("/customers"))
-  .catch(error => console.log(error));
-})
+router.get('/:page?', async (req, res, next) => {
+  const page = parseInt(req.params.page || 1);
+  console.log(page)
+
+  try {
+      const qty = await db.countCustomers();
+      const pagesQty = Math.ceil(qty / db.PAGE_SIZE);
+      const customers = await db.findCustomers(page);
+      res.render("customers", { title: "Clientes", customers, qty, pagesQty, page});
+      console.log(qty)
+  }
+  catch (error) {
+      console.log(error);
+      res.render("error", { message: "Não foi possível listar os clientes", error })
+  }
+});
 
 module.exports = router;

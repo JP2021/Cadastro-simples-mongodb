@@ -28,9 +28,9 @@
            <td><%= item.city %></td> 
            <td><%= item.uf %></td> 
            <td>
-            <a href="/customers/delete/<%= item._id %>" title="Excluir" class="btn btn-danger"
+          <center>  <a href="/customers/delete/<%= item._id %>" title="Excluir" class="btn btn-danger"
             onclick="return confirm('Tem certeza que deseja excluir esse cliente?')"><img src="/images/eraser.png" /></a></td> 
-          
+          </center>
           </tr>
           <%
         })
@@ -38,6 +38,34 @@
 
         </tbody>
        </table>
+       <nav aria-label="Page navigation example">
+        <ul class="pagination">
+          <li class="page-item">
+            <a class="page-link" href="/customers/<%= page - 1 %>" aria-label="Previous">
+              <span aria-hidden="true">&laquo;</span>
+            </a>
+          </li>
+        
+          <% for(let i=1 ; i<= pagesQty; i++){ 
+
+          if (page === i){%>
+            <li class="page-item"><a class="page-link active" href="/customers/<%= i %>"><%= i %></a></li>
+
+            <%
+
+          }else {
+            %>
+          
+            <li class="page-item"><a class="page-link" href="/customers/<%= i %>"><%= i %></a></li>
+            
+         <%  } } %>
+          
+            <a class="page-link" href="/customers/<%=page + 1%>" aria-label="Next">
+              <span aria-hidden="true">&raquo;</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
       </p>
       <br>
      <div class="row">
