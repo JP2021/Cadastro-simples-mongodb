@@ -1,6 +1,6 @@
 <%- include ("top.ejs") %>
     <div class="alert alert-info">
-<%= qty %> Clientes Cadastrados
+<%= qty %> Usuários Cadastrados
 </div>
     <table>
       <p>
@@ -8,9 +8,7 @@
         <thead class="thead-dark">
           <tr>
             <td>Nome </td>
-            <td>CPF </td>
-            <td>Região </td>
-            <td>UF </td>
+            <td>Email </td>
             <td>Ações </td>
           </tr>
         </thead>
@@ -18,19 +16,18 @@
         <tbody>
 
           <%
-          customers.forEach(item=>{
+          users.forEach(item=>{
 
           %>
          
           <tr>
            
-           <td><a href="/customers/edit/<%= item._id %>"><%= item.name %></a></td> 
-           <td><%= item.cpf %></td> 
-           <td><%= item.city %></td> 
-           <td><%= item.uf %></td> 
+           <td><a href="/users/edit/<%= item._id %>"><%= item.name %></a></td> 
+           <td><%= item.email %></td> 
+          
            <td>
-          <center>  <a href="/customers/delete/<%= item._id %>" title="Excluir" class="btn btn-danger"
-            onclick="return confirm('Tem certeza que deseja excluir esse cliente?')"><img src="/images/eraser.png" /></a></td> 
+          <center>  <a href="/users/delete/<%= item._id %>" title="Excluir" class="btn btn-danger"
+            onclick="return confirm('Tem certeza que deseja excluir esse usuário?')"><img src="/images/eraser.png" /></a></td> 
           </center>
           </tr>
           <%
@@ -42,7 +39,7 @@
        <nav aria-label="Page navigation example">
         <ul class="pagination">
           <li class="page-item">
-            <a class="page-link" href="/customers/<%= page - 1 %>" aria-label="Previous">
+            <a class="page-link" href="/users/<%= page - 1 %>" aria-label="Previous">
               <span aria-hidden="true">&laquo;</span>
             </a>
           </li>
@@ -50,18 +47,18 @@
           <% for(let i=1 ; i<= pagesQty; i++){ 
 
           if (page === i){%>
-            <li class="page-item"><a class="page-link active" href="/customers/<%= i %>"><%= i %></a></li>
+            <li class="page-item"><a class="page-link active" href="/users/<%= i %>"><%= i %></a></li>
 
             <%
 
           }else {
             %>
           
-            <li class="page-item"><a class="page-link" href="/customers/<%= i %>"><%= i %></a></li>
+            <li class="page-item"><a class="page-link" href="/users/<%= i %>"><%= i %></a></li>
             
          <%  } } %>
           
-            <a class="page-link" href="/customers/<%=page + 1%>" aria-label="Next">
+            <a class="page-link" href="/users/<%=page + 1%>" aria-label="Next">
               <span aria-hidden="true">&raquo;</span>
             </a>
           </li>
@@ -71,7 +68,7 @@
       <br>
      <div class="row">
       <div class="col-2">
-              <a href="/customers/new" class="btn btn-primary">Cadastrar Novo</a>
+              <a href="/users/new" class="btn btn-primary">Cadastrar Novo</a>
               </div>
               <div class="col-2">
                 <a href="/" class="btn btn-primary">Index</a>

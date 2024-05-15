@@ -1,4 +1,31 @@
 <%- include ("top.ejs") %>
+<div class="col-6">
+  <form action="/login" method="POST">
 
+    <div class="form-group mt-4 mb-3">
+      <label for="name">Username:</label>
+      <input type="text" name="name" class="form-control" placeholder="Nome de Usuário" />
+      </div>
+
+      <div class="form-group mt-4 mb-3">
+        <label for="name">Password:</label>
+        <input type="password" name="password" class="form-control" placeholder="Digite sua senha" />
+        </div>
+        <input type="submit" value="Login" class="btn btn-primary mb-3"  />
+        </form>
+      </hr>
+
+      <% if(message){ %>
+       
+        <div class="alert alert-danger">
+          <%= message %>
+        </div>
+     <% } %>
+
+     <p>
+      <a href="/users/forgout">Esqueceu senha?</a> | <a href="/users/new">Não possuiu Cadastro?</a>
+     </p>
+
+     
    
   <%- include("bottom.ejs") %>

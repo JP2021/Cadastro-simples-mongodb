@@ -8,10 +8,20 @@ const db = require("../db");
 
 router.get('/edit/:customersId',(request, response)=>{
   const id = request.params.customersId;
-  db.findUser(id)
+  db.findCustomer(id)
   .then(customers => response.render("newCustomer", {title: "Edição de usuário",customers}))
   .catch(error => console.log(error));
 
+})
+
+router.get('/delete/:customerId', (request, response) => {
+  const id = request.params.customerId;
+  db.deleteCustomer(id)
+      .then(result => response.redirect("/customers"))
+      .catch(error => {
+          console.log(error);
+          res.render("error", { message: "Não foi possível excluir o cliente", error })
+      });
 })
 
 router.get('/new', function(req, res, next) {
@@ -22,7 +32,7 @@ router.post('/new', (request, response)=>{
   if(!request.body.name)
   return response.redirect("/customers/new?error= O campo nome é obrigatório!");
   if(!request.body.cpf )
-  return response.redirect("/customers/new?error= O campo idade deve ser um número");
+  return response.redirect("/customers/new?error= O campo cpf deve ser um número");
   const id = request.body.id;
   const name= request.body.name;
   const cpf = parseInt(request.body.cpf);
@@ -31,9 +41,9 @@ router.post('/new', (request, response)=>{
   const uf = request.body.uf.length > 2? '' : request.body.uf ;
 
   const customers = { name, cpf, city, uf };
-  const promise = id ? db.updateCustomers(id, customers)
+  const promise = id ? db.updateCustomer(id, customers)
  
-                     : db.insertCustomers(customers);
+                     : db.insertCustomer(customers);
                      console.log(id);
   promise
     .then(result => {
