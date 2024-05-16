@@ -1,4 +1,22 @@
 <%- include ("top.ejs") %>
+    <div class="container">
 
-   
+      <br>
+     <div class="row">
+      <div class="col-2">
+              <a href="/customers" class="btn btn-primary">Gestão de Clientes</a>
+              </div>
+              <div class="col-2">
+                <a href="/users" class="btn btn-primary">Gestão de Usuários</a>
+                </div>
+                <div class="col-2">
+                  <form action="/logout" method="POST">
+                  <input type="submit" value="Logout" class="btn btn-primary"/>
+                </form>
+</div>
+    
+    </table>
+   <script>
+    
+   </script>
   <%- include("bottom.ejs") %>

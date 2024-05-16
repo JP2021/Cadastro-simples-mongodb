@@ -38,12 +38,11 @@ router.post('/new', (request, response)=>{
   
   const name = request.body.name;
   const email= request.body.email;
-  const password = request.body.password;
- 
+  
   const user = { name, email };
-  if(request.password){
+  if(request.body.password)
     user.password =  request.body.password  
-  }
+  
   const promise = id ? db.updateUser(id, user)
  
                      : db.insertUser(user);
