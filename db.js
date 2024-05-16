@@ -75,9 +75,29 @@ async function deleteCustomer(id) {
         .deleteOne({ _id: objectId });
 }
 
+
 //users
 
+async function countUsers() {
+    const connection = await connect();
+    return connection
+        .collection("users")
+        .countDocuments();
+        
+}
 
+async function findUsers(page = 1) {
+   
+    const totalSkip = (page - 1) * PAGE_SIZE;
+   
+    const connection = await connect();
+    return connection
+        .collection("users")
+        .find({})
+        .skip(totalSkip)
+        .limit(PAGE_SIZE)
+        .toArray();
+}
 
 async function findUser(id) {
     const objectId = ObjectId.createFromHexString(id);
@@ -85,6 +105,29 @@ async function findUser(id) {
     return connection
         .collection("users")
         .findOne({ _id: objectId });
+}
+
+async function insertUser(user) {
+    const connection = await connect();
+    return connection
+        .collection("users")
+        .insertOne(user);
+}
+
+async function updateUser(id, user) {
+    const objectId = ObjectId.createFromHexString(id);
+    const connection = await connect();
+    return connection
+        .collection("users")
+        .updateOne({ _id: objectId }, { $set: user });
+}
+
+async function deleteUser(id) {
+    const objectId = ObjectId.createFromHexString(id);
+    const connection = await connect();
+    return connection
+        .collection("users")
+        .deleteOne({ _id: objectId });
 }
 
 
@@ -98,7 +141,13 @@ module.exports = {
     deleteCustomer,
     findCustomer,
     countCustomers,
+    findUsers,
+    insertUser,
+    updateUser,
+    deleteUser,
     findUser,
+    countUsers,
+   
    
     connect
 }

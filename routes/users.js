@@ -29,16 +29,21 @@ router.get('/new', function(req, res, next) {
 });
 
 router.post('/new', (request, response)=>{
+  const id = request.body.id;
+
   if(!request.body.name)
   return response.redirect("/users/new?error= O campo nome é obrigatório!");
-  if(!request.body.password )
+  if(!id && !request.body.password )
   return response.redirect("/users/new?error= O campo senha é obrigatório");
-  const id = request.body.id;
+  
   const name = request.body.name;
   const email= request.body.email;
   const password = request.body.password;
  
-  const user = { name, email, password };
+  const user = { name, email };
+  if(request.password){
+    user.password =  request.body.password  
+  }
   const promise = id ? db.updateUser(id, user)
  
                      : db.insertUser(user);

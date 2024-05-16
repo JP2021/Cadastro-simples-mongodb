@@ -5,12 +5,7 @@
         <form action="/users/new" method="POST">
            <div class="row mb-3">
 
-             <div class="form-group">
-
-                <label for="name">Nome</label>
-                <input type="text" name="name" value="<%= user.name %>" class="form-control"/>
-            </div>
-            </div>
+             
            <div class="row mb-3">
 
             <div class="form-group">
@@ -19,23 +14,26 @@
                 <input type="text" name="name" value="<%= user.name %>" class="form-control"/>
             </div>
             </div>
+            <div class="row mb-3">
             <div class="form-group">
 
                 <label for="email">Email</label>
-                <input type="text" name="email" value="<%= user.email %>" class="form-control"/>
+                <input type="email" name="email" value="<%= user.email %>" class="form-control"/>
             </div>
             </div>
+            <div class="row mb-3">
+
             <div class="form-group">
 
                 <label for="password">Senha</label>
-                <input type="text" name="password" value="<%= user.password %>" class="form-control"/>
+                <input type="password" name="password" value="" class="form-control"/>
             </div>
             </div>
               
                 
                 <div class="row mb-3">
                     <div class="form-group">
-                <input type=text name="id" value="<%= users._id %>" class="form-control"/>
+                <input type=text name="id" value="<%= user._id %>" class="form-control"/>
                 </div>
                 </div>
                <br>
@@ -50,100 +48,7 @@
         
         </form>
         </div>
-        <script>
-            fetch("https://servicodados.ibge.gov.br/api/v1/localidades/estados")
-                .then(response => response.json())
-                .then(json => {
-                    const ufsHtml = document.getElementById("uf");
-                    const siglas = json.map(item => item.sigla).sort();
-                    siglas.forEach(item => {
-                        const opt = document.createElement("option");
-                        opt.innerText = item;
-                        ufsHtml.add(opt);
-
-                                              
-                       
-                    });
-
-                                                   
-
-                    <%
-                        if(customers.uf ){
-                            %>
-                            ufsHtml.value = "<%=customers.uf %>";
-                            var estado  = "<%=customers.uf %>";
-                      
-                            <%
-                        }
-                    %>
-                   
-                })
-                .catch(error => alert(error));
-            if(window.location.search){
-                const error = window.location.search.split('=')[1];
-                alert(decodeURI(error));
-            }
-        </script>
-
-
-<script>
- const ufsHtml = document.getElementById("uf");
-    
-<%
-                if(customers.uf){
-                    %>
-                   ufsHtml.value = "<%=customers.uf %>";
-                   console.log(ufsHtml)
-                    var estado  = "<%=customers.uf %>";
-
-                    <%
-                }
-            %>
-           
-    
-    fetch("https://servicodados.ibge.gov.br/api/v1/localidades/estados/"+estado+" /municipios")
-        .then(response => response.json())
-        .then(json => {
-           
-            const ufsHtml2 = document.getElementById("city");
-
-            <%
-                        if(customers.city ){
-                            %>
-                            ufsHtml2.value = "<%=customers.city %>";
-                            console.log(ufsHtml2)
-                            
-                            <%
-                        }
-                    %>
-
-           const nomes = json.map(item => item.nome).sort();
-           
-                        
-            nomes.forEach(item => {
-                const opt = document.createElement("option");
-                
-                opt.innerText = item;
-                
-                ufsHtml2.add(opt);
-                
-            })
-                                      
-             
-
-            <%
-                if(customers.city ){
-                    %>
-                    ufsHtml2.value = "<%=customers.city %>";
-                   
-                   
-              
-                    <%
-                }
-            %>
-            
-        })
-        .catch(error => alert(error));
+       <script>
     if(window.location.search){
         const error = window.location.search.split('=')[1];
         alert(decodeURI(error));
