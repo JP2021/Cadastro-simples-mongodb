@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 const db = require("../db");
 const { findUser } = require('../auth');
+const bcrypt = require ("bcryptjs");
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -18,7 +19,7 @@ router.get('/', function(req, res, next) {
       if(!user) return res.render("Login", {title:"Login", message: "Usuário ou senha inválidos"});     
       const password = req.body.password;
      
-      if(user.password!== password) return res.render("Login", {title:"Login", message:"Usuário ou senha inválidos"});
+      if(!bcrypt.compareSync(password, user.password)) return res.render("Login", {title:"Login", message:"Usuário ou senha inválidos"});
 
       res.redirect("/index")
 
