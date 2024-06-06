@@ -6,7 +6,7 @@ const db = require("../db");
 /* GET home page. */
 router.get('/', function(req, res, next) {
  
-      res.render("index", {title: "Bem vindo"});
+      res.render("index", {title: "Bem vindo", userProfile: parseInt(req.user.userProfile)});
     
    
     });

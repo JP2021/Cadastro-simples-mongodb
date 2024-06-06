@@ -39,8 +39,9 @@ router.post('/new', async(request, response)=>{
   
   const name = request.body.name;
   const email= request.body.email;
+  const profile = parseInt(request.body.profile);
   
-  const user = { name, email };
+  const user = { name, email, profile };
   if(request.body.password)
     user.password =  request.body.password  
     const nPassword = request.body.password  
@@ -59,7 +60,7 @@ router.post('/new', async(request, response)=>{
        Admin
       `);
   
-         response.redirect("/");
+         response.redirect("/users");
      }
   catch(error){
     console.error(error);
