@@ -1,9 +1,11 @@
 <%- include ("top.ejs") %>
+
+
 <div class="col-6">
   <form action="/login" method="POST">
 
     <div class="form-group mt-4 mb-3">
-      <label for="name">Username:</label>
+      <label for="name">UserName</label>
       <input type="text" name="name" class="form-control" placeholder="Nome de Usuário" />
       </div>
 
@@ -23,7 +25,7 @@
      <% } %>
 
      <p>
-      <a href="/users/forgout">Esqueceu senha?</a> | <a href="/users/new">Não possuiu Cadastro?</a>
+      <a href="/forgot">Esqueceu senha?</a> | <a href="/users/new">Não possuiu Cadastro?</a>
      </p>
 
      

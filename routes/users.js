@@ -2,6 +2,7 @@ const { request, response } = require('express');
 const express = require('express');
 const router = express.Router();
 const db = require("../db");
+const sendMail = require("../mail");
 
 /* GET home page. */
 
@@ -28,7 +29,7 @@ router.get('/new', function(req, res, next) {
   res.render("newUser", {title: "cadastro de usuários",  user:{}});
 });
 
-router.post('/new', (request, response)=>{
+router.post('/new', async(request, response)=>{
   const id = request.body.id;
 
   if(!request.body.name)
@@ -42,19 +43,31 @@ router.post('/new', (request, response)=>{
   const user = { name, email };
   if(request.body.password)
     user.password =  request.body.password  
-  
-  const promise = id ? db.updateUser(id, user)
+    const nPassword = request.body.password  
+  try{
+
+       await id 
+                      ? db.updateUser(id, user)
  
                      : db.insertUser(user);
                      console.log(id);
-  promise
-    .then(result => {
-      response.redirect("/users");
-    })
-  .catch(error =>{
-    return console.log(error);
-  })
-});
+                     await sendMail(user.email, "Usuário Criado Com Sucesso", `
+       Olá ${user.name}!
+       Use senha ${nPassword} para se autenticar se autenticar em http://localhost:3001
+       
+       Att.
+       Admin
+      `);
+  
+         response.redirect("/");
+     }
+  catch(error){
+    console.error(error);
+    response.redirect("/users/new?error=" + error.message);
+    res.render("newUser", {message: error.message})
+  }
+
+})
 
 router.get('/:page?', async (req, res, next) => {
   const page = parseInt(req.params.page || 1);
