@@ -1,9 +1,8 @@
-//db.js
+// db.js
 const { ObjectId, MongoClient } = require("mongodb");
 const bcrypt = require("bcryptjs");
 
-
-const PAGE_SIZE =5;
+const PAGE_SIZE = 5;
 
 async function connect() {
     if (global.connection) return global.connection;
@@ -29,13 +28,10 @@ async function countCustomers() {
     return connection
         .collection("customers")
         .countDocuments();
-        
 }
 
 async function findCustomers(page = 1) {
-   
     const totalSkip = (page - 1) * PAGE_SIZE;
-   
     const connection = await connect();
     return connection
         .collection("customers")
@@ -76,21 +72,26 @@ async function deleteCustomer(id) {
         .deleteOne({ _id: objectId });
 }
 
+// Função para buscar clientes pelo nome
+async function searchCustomersByName(name) {
+    const connection = await connect();
+    return connection
+        .collection("users")
+        .find({ name: new RegExp(name, 'i') })
+        .toArray();
+}
 
-//users
+// users
 
 async function countUsers() {
     const connection = await connect();
     return connection
         .collection("users")
         .countDocuments();
-        
 }
 
 async function findUsers(page = 1) {
-   
     const totalSkip = (page - 1) * PAGE_SIZE;
-   
     const connection = await connect();
     return connection
         .collection("users")
@@ -98,6 +99,13 @@ async function findUsers(page = 1) {
         .skip(totalSkip)
         .limit(PAGE_SIZE)
         .toArray();
+}
+
+async function findName() {
+    const connection = await connect();
+    return connection
+        .collection("users")
+        .find({ name: {} });
 }
 
 async function findUser(id) {
@@ -117,7 +125,7 @@ async function insertUser(user) {
 }
 
 async function updateUser(id, user) {
-    if(user.password)
+    if (user.password)
         user.password = bcrypt.hashSync(user.password, 12);
 
     const objectId = ObjectId.createFromHexString(id);
@@ -135,9 +143,6 @@ async function deleteUser(id) {
         .deleteOne({ _id: objectId });
 }
 
-
-
-
 module.exports = {
     PAGE_SIZE,
     findCustomers,
@@ -152,7 +157,7 @@ module.exports = {
     deleteUser,
     findUser,
     countUsers,
-   
-   
+    findName,
+    searchCustomersByName,
     connect
 }

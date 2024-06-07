@@ -1,0 +1,56 @@
+<%- include("top.ejs") %>
+
+<div class="col-6">
+  <div class="row mb-3">
+    <div class="form-group">
+      <h1>Busca de clientes</h1>
+      <form method="POST" action="/busca">
+        <div class="input-group">
+          <input type="text" name="query" placeholder="Digite um nome" class="form-control">
+          <button type="submit" class="btn btn-primary">Pesquisar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <table class="table table-bordered table-striped table-hover">
+    <thead class="thead-dark">
+      <tr>
+        <th>Nome</th>
+        <th>Perfil</th>
+        <th>Email</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (results.length > 0) { %>
+        <% results.forEach(client => { %>
+          <tr>
+            <td><a href="/users/edit/<%= client._id %>"><%= client.name %></a></td>
+            <td><%= parseInt(client.profile) === 1 ? "User" : "ADMIN" %></td>
+            <td><%= client.email %></td>
+            <td>
+              <center>
+                <a href="/users/delete/<%= client._id %>" title="Excluir" class="btn btn-danger"
+                  onclick="return confirm('Tem certeza que deseja excluir esse usuário?')">
+                  <img src="/images/eraser.png" />
+                </a>
+              </center>
+            </td>
+          </tr>
+        <% }); %>
+      <% } else { %>
+        <tr>
+          <td colspan="4">
+            <p>Nenhum cliente encontrado.</p>
+          </td>
+        </tr>
+      <% } %>
+    </tbody>
+  </table>
+
+  
+
+</div>
+
+<%- include("bottom.ejs") %>

@@ -54,6 +54,7 @@ router.post('/new', (request, response)=>{
   })
 });
 
+
 router.get('/:page?', async (req, res, next) => {
   const page = parseInt(req.params.page || 1);
   console.log(page)
