@@ -1,5 +1,174 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+<script>
+    function imprimirCampos() {
+        // Coletando os valores dos campos do formulário
+        const fornecedor = document.getElementById('fornecedor').value;
+        const pedido = document.getElementById('pedido').value;
+        const data = document.getElementById('data').value;
+        const name = document.getElementById('name').value;
+        const email = document.getElementById('email').value;
+        const celular = document.getElementById('celular').value;
+        const cpf = document.getElementById('cpf').value;
+        const insc_estadual = document.getElementById('insc_estadual').value;
+        const produto = document.getElementsByName('produto')[0].value;
+        const numero_serie = document.getElementById('numero_serie').value;
+        const valor = document.getElementById('valor').value;
+        const qtd = document.getElementById('qtd').value;
+        const produto2 = document.getElementsByName('produto2')[0].value;
+        const numero_serie2 = document.getElementById('numero_serie2').value;
+        const valor2 = document.getElementById('valor2').value;
+        const qtd2 = document.getElementById('qtd2').value;
+        const produto3 = document.getElementsByName('produto3')[0].value;
+        const numero_serie3 = document.getElementById('numero_serie3').value;
+        const valor3 = document.getElementById('valor3').value;
+        const qtd3 = document.getElementById('qtd3').value;
+        const produto4 = document.getElementsByName('produto4')[0].value;
+        const numero_serie4 = document.getElementById('numero_serie4').value;
+        const valor4 = document.getElementById('valor4').value;
+        const qtd4 = document.getElementById('qtd4').value;
+        const produto5 = document.getElementsByName('produto5')[0].value;
+        const numero_serie5 = document.getElementById('numero_serie5').value;
+        const valor5 = document.getElementById('valor5').value;
+        const qtd5 = document.getElementById('qtd5').value;
+        const rastreio = document.getElementById('rastreio').value;
+        const status = document.getElementById('status').value;
+        const metodo_envio = document.getElementById('metodo_envio').value;
+        const total_sem_frete = document.getElementById('total_sem_frete').value;
+        const valor_total = document.getElementById('valor_total').value;
+        const forma_pgto = document.getElementById('forma_pgto').value;
+        
+
+        // Array para armazenar os campos preenchidos
+        const camposPreenchidos = [];
+
+        // Função para adicionar campo ao array se estiver preenchido
+        function adicionarCampo(valor, label) {
+            if (valor) {
+                camposPreenchidos.push(`<p><strong>${label}:</strong> ${valor}</p>`);
+            }
+        }
+
+        // Adicionando campos preenchidos ao array
+        adicionarCampo(fornecedor, 'Fornecedor');
+        adicionarCampo(pedido, 'Número do Pedido');
+        adicionarCampo(data, 'Data');
+        adicionarCampo(name, 'Nome');
+        adicionarCampo(email, 'E-mail');
+        adicionarCampo(celular, 'Celular');
+        adicionarCampo(cpf, 'CNPJ / CPF');
+        adicionarCampo(insc_estadual, 'Inscrição Estadual');
+        adicionarCampo(produto, 'Produto');
+        adicionarCampo(numero_serie, 'Número de Série');
+        adicionarCampo(valor, 'Valor');
+        adicionarCampo(qtd, 'Quantidade');
+        adicionarCampo(produto2, 'Produto 2');
+        adicionarCampo(numero_serie2, 'Número de Série 2');
+        adicionarCampo(valor2, 'Valor 2');
+        adicionarCampo(qtd2, 'Quantidade ');
+        adicionarCampo(produto3, 'Produto 3');
+        adicionarCampo(numero_serie3, 'Número de Série 3');
+        adicionarCampo(valor3, 'Valor 3');
+        adicionarCampo(qtd3, 'Quantidade ');
+        adicionarCampo(produto4, 'Produto 4');
+        adicionarCampo(numero_serie4, 'Número de Série 4');
+        adicionarCampo(valor4, 'Valor 4');
+        adicionarCampo(qtd4, 'Quantidade ');
+        adicionarCampo(produto5, 'Produto 5');
+        adicionarCampo(numero_serie5, 'Número de Série 5');
+        adicionarCampo(valor5, 'Valor ');
+        adicionarCampo(qtd5, 'Quantidade ');
+        adicionarCampo(rastreio, 'Número de Rastreio');
+        adicionarCampo(status, 'Status');
+        adicionarCampo(metodo_envio, 'Método de Envio');
+        adicionarCampo(total_sem_frete, 'Total Sem Frete');
+        adicionarCampo(valor_total, 'Valor Total');
+        adicionarCampo(forma_pgto, 'Forma de Pagamento');
+       
+
+        // Criando o conteúdo HTML para impressão
+        let conteudoParaImpressao = '<h2>Dados do Formulário</h2>';
+        camposPreenchidos.forEach(campo => {
+            conteudoParaImpressao += campo;
+        });
+
+        // Abrindo uma nova janela para impressão
+        const janelaDeImpressao = window.open('', '', 'width=800,height=600');
+        janelaDeImpressao.document.write(conteudoParaImpressao);
+        janelaDeImpressao.document.close();
+        janelaDeImpressao.print();
+    }
+</script>
+<script>
+    function calcularTotal() {
+        var totalSemFrete = 0;
+
+        // Calcular para cada produto
+       
+            var valor = parseFloat(document.getElementById('valor').value) || 0;
+            var qtd = parseInt(document.getElementById('qtd').value) || 1;
+            var subtotal = valor * qtd;
+
+            var valor2 = parseFloat(document.getElementById('valor2').value) || 0;
+            var qtd2 = parseInt(document.getElementById('qtd2').value) || 1;
+            var subtotal2 = valor2 * qtd2;
+
+            var valor3 = parseFloat(document.getElementById('valor3').value) || 0;
+            var qtd3 = parseInt(document.getElementById('qtd3').value) || 1;
+            var subtotal3 = valor3 * qtd3;
+
+            var valor4 = parseFloat(document.getElementById('valor4').value) || 0;
+            var qtd4 = parseInt(document.getElementById('qtd4').value) || 1;
+            var subtotal4 = valor4 * qtd4;
+
+            
+            var valor5 = parseFloat(document.getElementById('valor5').value) || 0;
+            var qtd5 = parseInt(document.getElementById('qtd5').value) || 1;
+            var subtotal5 = valor5 * qtd5;
+
+                        
+
+            
+
+             totalSemFrete += subtotal + subtotal2 + subtotal3 + subtotal4 + subtotal5;
+        
+
+        // Atualizar o campo no formulário
+        document.getElementById('total_sem_frete').value = totalSemFrete.toFixed(2);
+
+        // Chamar a função para calcular o valor total considerando o frete
+        calcularValorTotal();
+    }
+
+    function calcularValorTotal() {
+        var totalSemFrete = parseFloat(document.getElementById('total_sem_frete').value) || 0;
+        var frete = parseFloat(document.getElementById('frete').value) || 0;
+
+        var valorTotal = totalSemFrete + frete;
+
+        // Atualizar o campo no formulário
+        document.getElementById('valor_total').value = valorTotal.toFixed(2);
+    }
+
+    // Adicionar event listeners para chamar as funções ao alterar os campos de valor e quantidade
+    document.addEventListener("DOMContentLoaded", function() {
+        for (var i = 1; i <= 5; i++) {
+            document.getElementById('valor' + i).addEventListener('input', function() {
+                calcularTotal();
+            });
+            document.getElementById('qtd' + i).addEventListener('input', function() {
+                calcularTotal();
+            });
+        }
+
+        document.getElementById('frete').addEventListener('input', function() {
+            calcularValorTotal();
+        });
+    });
+</script>
+
+
 </body>
 </html>

@@ -14,7 +14,8 @@ var indexRouter = require('./routes/index');
 var loginRouter = require('./routes/login');
 var usersRouter = require('./routes/users');
 var customersRouter = require('./routes/customers');
-var buscaRouter = require("./routes/busca")
+var buscaRouter = require("./routes/busca");
+var osRouter = require("./routes/os")
 
 
 
@@ -53,6 +54,7 @@ app.use('/', loginRouter);
 app.use('/index', authorizationMiddleware, indexRouter);
 app.use('/users', authorizationMiddleware, usersRouter);
 app.use('/customers', authorizationMiddleware, customersRouter);
+app.use('/os', authorizationMiddleware, osRouter);
 app.use('/busca', buscaRouter);
 
 

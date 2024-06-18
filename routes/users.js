@@ -79,14 +79,14 @@ router.post('/new', upload.single('profilePic'), async (request, response) => {
   }
 
   const nPassword = request.body.password;
-  try {
+ try {
     await id ? db.updateUser(id, user) : db.insertUser(user);
 
     await sendMail(user.email, "Usuário Criado Com Sucesso", `
       Olá ${user.name}!
       Use senha ${nPassword} para se autenticar em http://localhost:3001
        
-      Att.
+      Att. t
       Admin
     `);
 
