@@ -1,8 +1,21 @@
 <%- include ("top.ejs") %>
 
-<div class="alert alert-info">
-    <%= qty %>
+
+<div class="btn btn-primary mb-2">
+    <%= qty %> 
+    
 </div>
+<div class="row mb-3">
+    <div class="form-group">
+      
+      <form method="POST" action="/busca">
+        <div class="input-group">
+          <input type="text" name="query" placeholder="Digite um nome" class="form-control">
+          <button type="submit" class="btn btn-primary">Pesquisar</button>
+        </div>
+      </form>
+    </div>
+  </div>
 
 <table class="table table-bordered table-striped table-hover">
     <thead class="thead-dark">
@@ -62,7 +75,7 @@
         <a href="/os/new" class="btn btn-primary">Cadastrar Novo</a>
     </div>
     <div class="col-md-2">
-        <a href="/" class="btn btn-primary">Index</a>
+        <a href="/index" class="btn btn-primary">Index</a>
     </div>
     <div class="col-md-2">
         <form action="/logout" method="POST">

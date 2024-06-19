@@ -9,7 +9,7 @@ const sendMail = require("../mail");
 router.get('/edit/:osId', (request, response) => {
   const id = request.params.osId;
   db.findOs(id)
-    .then(os => response.render("newPedido", { title: "Edição Pedidos", os }))
+    .then(os => response.render("newPedido", { title: "Edição Pedidos", os, }))
     .catch(error => console.log(error));
 });
 
@@ -52,6 +52,8 @@ router.post('/new', (request, response) => {
     qtd3,
     qtd4,
     qtd5,
+    uf,
+    numero,
   
     produto,
     produto2,
@@ -136,6 +138,8 @@ router.post('/new', (request, response) => {
     insc_estadual,
     city: cityFinal,
     frete,
+    uf,
+    numero
   };
 
   const promise = id ? db.updateOs(id, os) : db.insertOs(os);

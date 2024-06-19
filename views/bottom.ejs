@@ -5,98 +5,155 @@
 <script>
     function imprimirCampos() {
         // Coletando os valores dos campos do formulário
-        const fornecedor = document.getElementById('fornecedor').value;
-        const pedido = document.getElementById('pedido').value;
-        const data = document.getElementById('data').value;
-        const name = document.getElementById('name').value;
-        const email = document.getElementById('email').value;
-        const celular = document.getElementById('celular').value;
-        const cpf = document.getElementById('cpf').value;
-        const insc_estadual = document.getElementById('insc_estadual').value;
-        const produto = document.getElementsByName('produto')[0].value;
-        const numero_serie = document.getElementById('numero_serie').value;
-        const valor = document.getElementById('valor').value;
-        const qtd = document.getElementById('qtd').value;
-        const produto2 = document.getElementsByName('produto2')[0].value;
-        const numero_serie2 = document.getElementById('numero_serie2').value;
-        const valor2 = document.getElementById('valor2').value;
-        const qtd2 = document.getElementById('qtd2').value;
-        const produto3 = document.getElementsByName('produto3')[0].value;
-        const numero_serie3 = document.getElementById('numero_serie3').value;
-        const valor3 = document.getElementById('valor3').value;
-        const qtd3 = document.getElementById('qtd3').value;
-        const produto4 = document.getElementsByName('produto4')[0].value;
-        const numero_serie4 = document.getElementById('numero_serie4').value;
-        const valor4 = document.getElementById('valor4').value;
-        const qtd4 = document.getElementById('qtd4').value;
-        const produto5 = document.getElementsByName('produto5')[0].value;
-        const numero_serie5 = document.getElementById('numero_serie5').value;
-        const valor5 = document.getElementById('valor5').value;
-        const qtd5 = document.getElementById('qtd5').value;
-        const rastreio = document.getElementById('rastreio').value;
-        const status = document.getElementById('status').value;
-        const metodo_envio = document.getElementById('metodo_envio').value;
-        const total_sem_frete = document.getElementById('total_sem_frete').value;
-        const valor_total = document.getElementById('valor_total').value;
-        const forma_pgto = document.getElementById('forma_pgto').value;
-        
+        const campos = {
+            fornecedor: document.getElementById('fornecedor').value,
+            pedido: document.getElementById('pedido').value,
+            data: document.getElementById('data').value,
+            name: document.getElementById('name').value,
+            email: document.getElementById('email').value,
+            celular: document.getElementById('celular').value,
+            cpf: document.getElementById('cpf').value,
+            insc_estadual: document.getElementById('insc_estadual').value,
+            rua: document.getElementById('rua').value,
+            bairro: document.getElementById('bairro').value,
+            cep: document.getElementById('cep').value,
+            uf: document.getElementById('uf').value,
+            city: document.getElementById('city').value,
+            rastreio: document.getElementById('rastreio').value,
+            status: document.getElementById('status').value,
+            metodo_envio: document.getElementById('metodo_envio').value,
+            total_sem_frete: document.getElementById('total_sem_frete').value,
+            valor_total: document.getElementById('valor_total').value,
+            forma_pgto: document.getElementById('forma_pgto').value,
+            frete: document.getElementById('frete').value
+        };
 
-        // Array para armazenar os campos preenchidos
-        const camposPreenchidos = [];
-
-        // Função para adicionar campo ao array se estiver preenchido
-        function adicionarCampo(valor, label) {
-            if (valor) {
-                camposPreenchidos.push(`<p><strong>${label}:</strong> ${valor}</p>`);
+        const produtos = [
+            {
+                nome: document.getElementsByName('produto')[0].value,
+                numero_serie: document.getElementById('numero_serie').value,
+                valor: document.getElementById('valor').value,
+                qtd: document.getElementById('qtd').value
+            },
+            {
+                nome: document.getElementsByName('produto2')[0].value,
+                numero_serie: document.getElementById('numero_serie2').value,
+                valor: document.getElementById('valor2').value,
+                qtd: document.getElementById('qtd2').value
+            },
+            {
+                nome: document.getElementsByName('produto3')[0].value,
+                numero_serie: document.getElementById('numero_serie3').value,
+                valor: document.getElementById('valor3').value,
+                qtd: document.getElementById('qtd3').value
+            },
+            {
+                nome: document.getElementsByName('produto4')[0].value,
+                numero_serie: document.getElementById('numero_serie4').value,
+                valor: document.getElementById('valor4').value,
+                qtd: document.getElementById('qtd4').value
+            },
+            {
+                nome: document.getElementsByName('produto5')[0].value,
+                numero_serie: document.getElementById('numero_serie5').value,
+                valor: document.getElementById('valor5').value,
+                qtd: document.getElementById('qtd5').value
             }
+        ];
+
+        // Função para criar uma seção HTML
+        function criarSecao(titulo, campos) {
+            let conteudo = `<div class="section"><h2>${titulo}</h2>`;
+            for (let campo in campos) {
+                if (campos[campo]) {
+                    conteudo += `<p><strong>${campo}:</strong> ${campos[campo]}</p>`;
+                }
+            }
+            conteudo += `</div>`;
+            return conteudo;
         }
 
-        // Adicionando campos preenchidos ao array
-        adicionarCampo(fornecedor, 'Fornecedor');
-        adicionarCampo(pedido, 'Número do Pedido');
-        adicionarCampo(data, 'Data');
-        adicionarCampo(name, 'Nome');
-        adicionarCampo(email, 'E-mail');
-        adicionarCampo(celular, 'Celular');
-        adicionarCampo(cpf, 'CNPJ / CPF');
-        adicionarCampo(insc_estadual, 'Inscrição Estadual');
-        adicionarCampo(produto, 'Produto');
-        adicionarCampo(numero_serie, 'Número de Série');
-        adicionarCampo(valor, 'Valor');
-        adicionarCampo(qtd, 'Quantidade');
-        adicionarCampo(produto2, 'Produto 2');
-        adicionarCampo(numero_serie2, 'Número de Série 2');
-        adicionarCampo(valor2, 'Valor 2');
-        adicionarCampo(qtd2, 'Quantidade ');
-        adicionarCampo(produto3, 'Produto 3');
-        adicionarCampo(numero_serie3, 'Número de Série 3');
-        adicionarCampo(valor3, 'Valor 3');
-        adicionarCampo(qtd3, 'Quantidade ');
-        adicionarCampo(produto4, 'Produto 4');
-        adicionarCampo(numero_serie4, 'Número de Série 4');
-        adicionarCampo(valor4, 'Valor 4');
-        adicionarCampo(qtd4, 'Quantidade ');
-        adicionarCampo(produto5, 'Produto 5');
-        adicionarCampo(numero_serie5, 'Número de Série 5');
-        adicionarCampo(valor5, 'Valor ');
-        adicionarCampo(qtd5, 'Quantidade ');
-        adicionarCampo(rastreio, 'Número de Rastreio');
-        adicionarCampo(status, 'Status');
-        adicionarCampo(metodo_envio, 'Método de Envio');
-        adicionarCampo(total_sem_frete, 'Total Sem Frete');
-        adicionarCampo(valor_total, 'Valor Total');
-        adicionarCampo(forma_pgto, 'Forma de Pagamento');
-       
-
         // Criando o conteúdo HTML para impressão
-        let conteudoParaImpressao = '<h2>Dados do Formulário</h2>';
-        camposPreenchidos.forEach(campo => {
-            conteudoParaImpressao += campo;
-        });
+        let conteudoParaImpressao = `
+            <div class="container">
+                ${criarSecao('Cliente', {
+                    'Nome': campos.name,
+                    'E-mail': campos.email,
+                    'Celular': campos.celular,
+                    'CNPJ / CPF': campos.cpf,
+                    'Inscrição Estadual': campos.insc_estadual,
+                    'Rua': campos.rua,
+                    'Bairro': campos.bairro,
+                    'Cep': campos.cep,
+                    'Estado': campos.uf,
+                    'Cidade': campos.city
+                })}
+                ${criarSecao('Pedido', {
+                    'Fornecedor': campos.fornecedor,
+                    'Número do Pedido': campos.pedido,
+                    'Data': campos.data,
+                    'Número de Rastreio': campos.rastreio,
+                    'Status': campos.status,
+                    'Método de Envio': campos.metodo_envio,
+                    'Total Sem Frete': campos.total_sem_frete,
+                    'Valor do Frete': campos.frete,
+                    'Valor Total': campos.valor_total,
+                    'Forma de Pagamento': campos.forma_pgto
+                })}
+            </div>
+            <div class="container">
+                <div class="section">
+                    <h2>Produtos</h2>
+                    ${produtos.map(produto => {
+                        if (produto.nome || produto.numero_serie || produto.valor || produto.qtd) {
+                            return `
+                                <p><strong>Produto:</strong> ${produto.nome}</p>
+                                <p><strong>Número de Série:</strong> ${produto.numero_serie}</p>
+                                <p><strong>Valor:</strong> ${produto.valor}</p>
+                                <p><strong>Quantidade:</strong> ${produto.qtd}</p>
+                            `;
+                        }
+                        return '';
+                    }).join('<br>')}
+                </div>
+            </div>
+        `;
 
         // Abrindo uma nova janela para impressão
         const janelaDeImpressao = window.open('', '', 'width=800,height=600');
-        janelaDeImpressao.document.write(conteudoParaImpressao);
+        janelaDeImpressao.document.write(`
+            <html>
+            <head>
+                <title>Impressão de Pedido</title>
+                <style>
+                    @media print {
+                        body {
+                            font-family: Arial, sans-serif;
+                        }
+                        .container {
+                            display: flex;
+                            flex-wrap: wrap;
+                            justify-content: space-between;
+                        }
+                        .section {
+                            width: 48%;
+                            margin: 1%;
+                            padding: 10px;
+                            border: 1px solid #000;
+                        }
+                        .section h2 {
+                            font-size: 18px;
+                            margin-bottom: 10px;
+                        }
+                        .section p {
+                            margin: 5px 0;
+                        }
+                    }
+                </style>
+            </head>
+            <body>${conteudoParaImpressao}</body>
+            </html>
+        `);
         janelaDeImpressao.document.close();
         janelaDeImpressao.print();
     }
@@ -167,6 +224,34 @@
             calcularValorTotal();
         });
     });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+document.getElementById('cep').addEventListener('blur', function() {
+    var cep = this.value.replace(/\D/g, '');
+
+    if (cep.length === 8) {
+        axios.get(`https://viacep.com.br/ws/${cep}/json/`)
+            .then(function(response) {
+                if (!response.data.erro) {
+                    document.getElementById('rua').value = response.data.logradouro;
+                    document.getElementById('bairro').value = response.data.bairro;
+                    document.getElementById('city').value = response.data.localidade;
+                    document.getElementById('uf').value = response.data.uf;
+                } else {
+                    alert('CEP não encontrado.');
+                }
+            })
+            .catch(function(error) {
+                console.error('Erro ao buscar endereço:', error);
+                alert('Erro ao buscar endereço. Tente novamente.');
+            });
+    } else {
+        alert('CEP inválido.');
+    }
+});
 </script>
 
 

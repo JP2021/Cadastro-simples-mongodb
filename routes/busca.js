@@ -16,7 +16,7 @@ router.get('/busca', (req, res) => {
 router.post('/', async (req, res) => {
     const query = req.body.query;
     try {
-        const results = await db.searchCustomersByName(query);
+        const results = await db.searchOSByName(query);
         res.render('busca', { title: "", results });
     } catch (err) {
         res.status(500).send(err);

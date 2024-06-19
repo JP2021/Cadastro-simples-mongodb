@@ -1,20 +1,67 @@
 <%- include("top.ejs") %>
-  <div class="row">
-    <div class="col-2">
-      <a href="/customers" class="btn btn-primary">Gestão de Clientes</a>
-    </div>
-    <div class="col-2">
-      <a href="/os" class="btn btn-primary">Pedido Interno</a>
-    </div>
+
+<style>
+  body {
+    background-color: rgb(26, 26, 30);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+  }
+
+  .form-control, .form-group label, .btn, .input-group select {
+    background-color: black;
+    color: rgb(160, 159, 159);
+    border: 1px solid rgb(29, 28, 28);
+  }
+
+  .btn-primary {
+    background-color: #8239E9;
+  }
+
+  .btn-secondary {
+    background-color: #e62323;
+  }
+
+  .btn {
+    color: white;
+  }
+
+  .btn-success {
+    background-color: #06580a;
+  }
+
+  .alert.alert-danger {
+    background-color: red;
+    color: white;
+  }
+
+  .container {
+    width: 100%;
+    max-width: 600px; /* Ajuste o tamanho conforme necessário */
+  }
+
+  .btn-group {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 10px; /* Espaço entre os botões */
+  }
+</style>
+
+<div class="container">
+  <div class="btn-group">
+    <a href="/customers" class="btn btn-primary">Gestão de Clientes</a>
+    <a href="/os" class="btn btn-primary">Pedido Interno</a>
     <% if(userProfile === 2) { %>
-    <div class="col-2">
       <a href="/users" class="btn btn-primary">Usuários</a>
-    </div>
     <% } %>
-    <div class="col-2">
-      <form action="/logout" method="POST">
-        <input type="submit" value="Logout" class="btn btn-secondary" />
-      </form>
-    </div>
+    <form action="/logout" method="POST" style="margin: 0;">
+      <input type="submit" value="Logout" class="btn btn-secondary" />
+    </form>
   </div>
-  <%- include("bottom.ejs") %>
+</div>
+
+<%- include("bottom.ejs") %>

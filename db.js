@@ -111,7 +111,13 @@ async function deleteOs(id) {
     const conn = await connect();
     return conn.collection("os").deleteOne({ _id: objectId });
 }
-
+async function searchOSByName(name) {
+    const conn = await connect();
+    return conn
+        .collection("os")
+        .find({ name: new RegExp(name, 'i') })
+        .toArray();
+}
 // Funções relacionadas aos usuários (users)
 
 async function countUsers() {
@@ -175,6 +181,7 @@ module.exports = {
     insertOs,
     updateOs,
     deleteOs,
+    searchOSByName,
     // Funções relacionadas aos usuários
     countUsers,
     findUsers,
