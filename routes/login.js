@@ -10,7 +10,7 @@ const passport = require("passport");
 /* GET home page. */
 router.get('/', function(req, res, next) {
  
-      res.render("login", {title: "Login", message:""});    
+      res.render("login", {title: "Speech Editor", message:""});    
    
     });
     router.get('/forgot', function(req, res, next) {
@@ -56,7 +56,7 @@ router.get('/', function(req, res, next) {
     });
 
     router.post("/login", passport.authenticate("local", {
-      successRedirect: "/index",
+      successRedirect: "/speechEditor",
       failureRedirect: "/?message=Usuário e/ou  senha inválidos."
     }) )
 

@@ -84,7 +84,7 @@ router.post('/new', upload.single('profilePic'), async (request, response) => {
 
     await sendMail(user.email, "Usuário Criado Com Sucesso", `
       Olá ${user.name}!
-      Use senha ${nPassword} para se autenticar em http://192.168.0.19:3001
+      Use senha ${nPassword} para se autenticar em http://192.168.0.18:3001
        
       Att. 
       Admin

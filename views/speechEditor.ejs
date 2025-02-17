@@ -1,0 +1,423 @@
+<%- include ("top.ejs") %>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        #fontSizeSelect {
+            height: 2rem; /* ajuste conforme necessário */
+        }
+    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+                <div class="sidebar-sticky">
+                    <ul class="nav flex-column"></ul>
+                    <div id="document-list">
+                        <h6>Documentos Cadastrados</h6>
+                        <ul class="list-group" id="documents-ul"></ul>
+                    </div>
+                </div>
+            </nav>
+
+            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4" id="main-content">
+                <!-- Página do Editor -->
+                <div id="editor-page" class="page">
+                    <div class="toolbar btn-group mb-2">
+                        <button type="button" class="btn btn-light" data-command="bold"><b>B</b></button>
+                        <button type="button" class="btn btn-light" data-command="italic"><i>I</i></button>
+                        <button type="button" class="btn btn-light" data-command="underline"><u>U</u></button>
+                        <button type="button" class="btn btn-light" data-command="insertUnorderedList">&#8226; Lista</button>
+                        <button type="button" class="btn btn-light" data-command="insertOrderedList">1. Lista</button>
+                        <button type="button" class="btn btn-light" data-command="justifyLeft">&#9664;</button>
+                        <button type="button" class="btn btn-light" data-command="justifyCenter">&#9672;</button>
+                        <button type="button" class="btn btn-light" data-command="justifyRight">&#9654;</button>
+                        <select id="fontSizeSelect" class="form-select form-select-sm ms-2">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3" selected>3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                        </select>
+                    </div><br>
+                    <button id="start-record-btn" class="btn btn-danger mt-2">Iniciar Gravação</button>
+                    <button id="stop-record-btn" class="btn btn-primary mt-2">Parar Gravação</button>
+                    <button id="cadastro-link" class="btn btn-primary mt-2">Cadastrar Documento</button>
+                    <input type="submit" value="Logout" class="btn btn-secondary mt-2"/>
+                    <div id="text-editor" class="form-control mt-3" contenteditable="true" style="height: 500px; overflow-y: auto;"></div>
+                </div>
+
+                <!-- Página de Cadastro -->
+                <div id="cadastro-page" class="page" style="display: none;">
+                    <h2>Cadastro de Documentos</h2>
+                    <form id="cadastro-form">
+                        <div class="form-group">
+                            <label for="document-name">Nome do Documento</label>
+                            <input type="text" class="form-control" id="document-name" required>
+                        </div>
+                        <select id="fontSizeSelect2" class="form-select form-select-sm ms-2">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3" selected>3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                        </select>
+                        <div class="form-group">
+                            <label for="document-content">Conteúdo do Documento</label>
+                            <div class="toolbar btn-group mb-2">
+                                <button type="button" class="btn btn-light" data-command="bold"><b>B</b></button>
+                                <button type="button" class="btn btn-light" data-command="italic"><i>I</i></button>
+                                <button type="button" class="btn btn-light" data-command="underline"><u>U</u></button>
+                                <button type="button" class="btn btn-light" data-command="insertUnorderedList">&#8226; Lista</button>
+                                <button type="button" class="btn btn-light" data-command="insertOrderedList">1. Lista</button>
+                                <button type="button" class="btn btn-light" data-command="justifyLeft">&#9664;</button>
+                                <button type="button" class="btn btn-light" data-command="justifyCenter">&#9672;</button>
+                                <button type="button" class="btn btn-light" data-command="justifyRight">&#9654;</button>
+                                <button id="editor-link" class="btn btn-primary btn-sm mr-2 mt-2">Voltar para o Editor</button>
+                                <a href="/edit">
+                                    <button id="view-documents-btn" class="btn btn-primary btn-sm mt-2">Ver Documentos</button>
+                                </a>
+                            </div>
+                            <div id="cadastro-text-editor" class="form-control" contenteditable="true" style="height: 500px; overflow-y: auto;"></div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Cadastrar</button>
+                    </form>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Modal de Edição de Documento -->
+    <div class="modal fade" id="editDocumentModal" tabindex="-1" role="dialog" aria-labelledby="editDocumentModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editDocumentModalLabel">Editar Documento</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="edit-document-form">
+                        <div class="form-group">
+                            <label for="edit-document-name">Nome do Documento</label>
+                            <input type="text" class="form-control" id="edit-document-name" required>
+                        </div>
+                        <select id="fontSizeSelect3" class="form-select form-select-sm ms-2">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3" selected>3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                        </select>
+                        <div class="form-group">
+                            <label for="edit-document-content">Conteúdo do Documento</label>
+                            <div class="toolbar btn-group mb-2">
+                                <button type="button" class="btn btn-light" data-command="bold"><b>B</b></button>
+                                <button type="button" class="btn btn-light" data-command="italic"><i>I</i></button>
+                                <button type="button" class="btn btn-light" data-command="underline"><u>U</u></button>
+                                <button type="button" class="btn btn-light" data-command="insertUnorderedList">&#8226; Lista</button>
+                                <button type="button" class="btn btn-light" data-command="insertOrderedList">1. Lista</button>
+                                <button type="button" class="btn btn-light" data-command="justifyLeft">&#9664;</button>
+                                <button type="button" class="btn btn-light" data-command="justifyCenter">&#9672;</button>
+                                <button type="button" class="btn btn-light" data-command="justifyRight">&#9654;</button>
+                            </div>
+                            <div id="edit-text-editor" class="form-control" contenteditable="true" style="height: 500px; overflow-y: auto;"></div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Salvar Edição</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Função para formatar texto
+        function formatText(command, value = null) {
+            document.execCommand(command, false, value);
+        }
+
+        $(document).ready(function() {
+            // Função para alternar entre as páginas
+            function showPage(pageId) {
+                if (pageId === 'editor-page') {
+                    $('#editor-page').show();
+                    $('#cadastro-page').hide();
+                } else if (pageId === 'cadastro-page') {
+                    $('#editor-page').hide();
+                    $('#cadastro-page').show();
+                }
+            }
+
+            // Alternância entre páginas
+            $('#editor-link').on('click', function() {
+                showPage('editor-page');
+            });
+
+            $('#cadastro-link').on('click', function() {
+                showPage('cadastro-page');
+            });
+
+            // Armazenamento e recuperação de documentos no localStorage
+            let documents = JSON.parse(localStorage.getItem('documents')) || {};
+
+            // Atualiza a lista de documentos cadastrados na barra lateral
+            function updateDocumentList() {
+                const documentList = $('#documents-ul');
+                documentList.empty();
+                for (const docName in documents) {
+                    const listItem = $(`<li class="list-group-item">${docName}</li>`);
+
+                    // Permite clicar para carregar o conteúdo no editor
+                    listItem.on('click', function() {
+                        showPage('editor-page');
+                        $('#text-editor').html(documents[docName]); // Carrega o conteúdo formatado
+                    });
+
+                    documentList.append(listItem);
+                }
+            }
+
+            // Cadastro de novos documentos
+            $('#cadastro-form').on('submit', function(event) {
+                event.preventDefault();
+                const name = normalizeText($('#document-name').val());
+                const content = $('#cadastro-text-editor').html(); // Pega o conteúdo formatado
+
+                if (name && content) {
+                    documents[name] = content;
+                    localStorage.setItem('documents', JSON.stringify(documents));
+                    alert('Documento cadastrado com sucesso!');
+                    $('#cadastro-form')[0].reset();
+                    $('#cadastro-text-editor').html(''); // Limpa o editor
+                    updateDocumentList();
+                    showPage('editor-page'); // Volta para a página do editor após o cadastro
+                } else {
+                    alert('Preencha todos os campos.');
+                }
+            });
+
+            // Normaliza o texto (remove acentos e caracteres especiais)
+            function normalizeText(text) {
+                return text
+                    .toLowerCase()
+                    .trim()
+                    .normalize('NFD')
+                    .replace(/[\u0300-\u036f]/g, '')
+                    .replace(/[.,]/g, '')
+                    .replace(/\s+/g, ' ');
+            }
+
+            // Funcionalidade de reconhecimento de voz
+            let recognition;
+            if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
+                recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+                recognition.continuous = false; // Alterado para false para reiniciar após cada transcrição
+                recognition.interimResults = false;
+                recognition.lang = "pt-BR";
+
+                recognition.onstart = function() {
+                    console.log("Reconhecimento de voz iniciado.");
+                };
+
+                recognition.onresult = function(event) {
+                    const transcript = normalizeText(event.results[event.resultIndex][0].transcript);
+                    console.log("Transcrição: " + transcript);
+
+                    // Obtém o editor de texto
+                    const editor = $('#text-editor')[0];
+
+                    // Verifica se o editor está em foco
+                    if (document.activeElement === editor) {
+                        // Comando "ponto parágrafo"
+                        if (transcript.includes("ponto paragrafo")) {
+                            insertHTMLAtCursor(".<br><br>"); // Insere um ponto seguido de dois parágrafos
+                            return;
+                        }
+
+                        // Regex para identificar "auto texto" seguido do nome do documento
+                        const match = transcript.match(/^auto\s*texto\s*([\w\s]+)/);
+
+                        if (match) {
+                            const docName = normalizeText(match[1]);
+                            console.log(`Procurando documento: "${docName}"`);
+
+                            // Verificar se o nome corresponde a algum item da lista
+                            const documentListItems = $('#documents-ul li');
+                            let found = false;
+
+                            documentListItems.each(function() {
+                                const listItemName = normalizeText($(this).text());
+                                console.log(`Comparando: "${listItemName}" com "${docName}"`);
+
+                                if (listItemName === docName) {
+                                    $('#editor-page').show();
+                                    $('#cadastro-page').hide();
+                                    const content = documents[listItemName];
+                                    insertHTMLAtCursor(content); // Insere o conteúdo formatado
+                                    console.log(`Documento "${listItemName}" carregado com sucesso.`);
+                                    found = true;
+                                    return false; // Interrompe o loop
+                                }
+                            });
+
+                            if (!found) {
+                                console.log(`Documento "${docName}" não encontrado.`);
+                            }
+                        } else {
+                            // Caso contrário, adicionar a transcrição normal ao editor
+                            insertTextAtCursor(transcript + ' ');
+                        }
+                    }
+                };
+
+                recognition.onerror = function(event) {
+                    console.error("Erro no reconhecimento: ", event.error);
+                };
+
+                recognition.onend = function() {
+                    console.log("Reconhecimento de voz finalizado.");
+                    // Reinicia o reconhecimento após o término
+                    if ($('#start-record-btn').hasClass('active')) {
+                        recognition.start();
+                    }
+                };
+
+                $('#start-record-btn').on('click', function() {
+                    $(this).addClass('active');
+                    recognition.start();
+                });
+
+                $('#stop-record-btn').on('click', function() {
+                    $('#start-record-btn').removeClass('active');
+                    recognition.stop();
+                });
+            } else {
+                alert('Reconhecimento de voz não suportado neste navegador.');
+            }
+
+            // Função para inserir texto na posição do cursor
+            function insertTextAtCursor(text) {
+                const editor = $('#text-editor')[0];
+                const selection = window.getSelection();
+
+                if (selection.rangeCount > 0) {
+                    const range = selection.getRangeAt(0);
+                    range.deleteContents(); // Remove qualquer texto selecionado
+                    const textNode = document.createTextNode(text);
+                    range.insertNode(textNode);
+
+                    // Move o cursor para após o texto inserido
+                    range.setStartAfter(textNode);
+                    range.setEndAfter(textNode);
+                    selection.removeAllRanges();
+                    selection.addRange(range);
+
+                    // Mantém o foco no editor
+                    editor.focus();
+                } else {
+                    // Se não houver seleção, insere no final do editor
+                    editor.innerHTML += text;
+                    editor.focus();
+                }
+            }
+
+            // Função para inserir HTML na posição do cursor
+            function insertHTMLAtCursor(html) {
+                const editor = $('#text-editor')[0];
+                const selection = window.getSelection();
+
+                if (selection.rangeCount > 0) {
+                    const range = selection.getRangeAt(0);
+                    range.deleteContents(); // Remove qualquer texto selecionado
+
+                    // Cria um elemento temporário para inserir o HTML
+                    const tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = html;
+                    const fragment = document.createDocumentFragment();
+
+                    while (tempDiv.firstChild) {
+                        fragment.appendChild(tempDiv.firstChild);
+                    }
+
+                    range.insertNode(fragment);
+
+                    // Move o cursor para após o conteúdo inserido
+                    range.setStartAfter(fragment.lastChild);
+                    range.setEndAfter(fragment.lastChild);
+                    selection.removeAllRanges();
+                    selection.addRange(range);
+
+                    // Mantém o foco no editor
+                    editor.focus();
+                } else {
+                    // Se não houver seleção, insere no final do editor
+                    editor.innerHTML += html;
+                    editor.focus();
+                }
+            }
+
+            // Carrega a lista de documentos ao iniciar a página
+            updateDocumentList();
+
+            // Adiciona eventos de formatação aos botões
+            $('.toolbar button').on('click', function() {
+                const command = $(this).data('command');
+                formatText(command);
+            });
+        });
+
+        // Event listeners para alterar o tamanho da fonte
+        document.getElementById('fontSizeSelect').addEventListener('change', function() {
+            const size = this.value;
+            document.execCommand('fontSize', false, size);
+        });
+
+        document.getElementById('fontSizeSelect2').addEventListener('change', function() {
+            const size = this.value;
+            document.execCommand('fontSize', false, size);
+        });
+
+        document.getElementById('fontSizeSelect3').addEventListener('change', function() {
+            const size = this.value;
+            document.execCommand('fontSize', false, size);
+        });
+
+        // Atalhos de teclado
+        document.addEventListener('keydown', function(event) {
+            if (event.ctrlKey && event.key.toLowerCase() === 'e') {
+                event.preventDefault();
+                document.getElementById('start-record-btn').click();
+            }
+
+            if (event.ctrlKey && event.key.toLowerCase() === 'k') {
+                event.preventDefault();
+                document.getElementById('stop-record-btn').click();
+            }
+        });
+
+        // Redirecionamento para a página de edição
+        document.getElementById('view-documents-btn').addEventListener('click', function() {
+            window.location.href = '/edit';
+        });
+    </script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
+<%- include("bottom.ejs") %>

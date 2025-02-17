@@ -15,7 +15,9 @@ var loginRouter = require('./routes/login');
 var usersRouter = require('./routes/users');
 var customersRouter = require('./routes/customers');
 var buscaRouter = require("./routes/busca");
-var osRouter = require("./routes/os")
+var osRouter = require("./routes/os");
+var speechRouter = require("./routes/speech");
+var editspeechEditorRouter = require("./routes/editspeechEditor")
 
 
 
@@ -24,6 +26,7 @@ var app = express();
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+app.use(express.static('public'));
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -51,11 +54,14 @@ app.use(passport.session());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.use('/', loginRouter);
+app.use('/', authorizationMiddleware,speechRouter);
+app.use('/',authorizationMiddleware,editspeechEditorRouter);
 app.use('/index', authorizationMiddleware, indexRouter);
 app.use('/users', authorizationMiddleware, usersRouter);
 app.use('/customers', authorizationMiddleware, customersRouter);
 app.use('/os', authorizationMiddleware, osRouter);
 app.use('/busca', buscaRouter);
+
 
 
 // catch 404 and forward to error handler

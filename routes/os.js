@@ -9,7 +9,7 @@ const sendMail = require("../mail");
 router.get('/edit/:osId', (request, response) => {
   const id = request.params.osId;
   db.findOs(id)
-    .then(os => response.render("newPedido", { title: "Edição Pedidos", os, }))
+    .then(os => response.render("newPedido", { title: "Edição OS", os, }))
     .catch(error => console.log(error));
 });
 
@@ -19,12 +19,12 @@ router.get('/delete/:osId', (request, response) => {
     .then(result => response.redirect("/os"))
     .catch(error => {
       console.log(error);
-      response.render("error", { message: "Não foi possível excluir o Pedido", error });
+      response.render("error", { message: "Não foi possível excluir a OS", error });
     });
 });
 
 router.get('/new', (req, res, next) => {
-  res.render("newPedido", { title: "Cadastro de Pedido", os: {} });
+  res.render("newPedido", { title: "Cadastro de OS", os: {} });
 });
 
 
@@ -145,32 +145,7 @@ router.post('/new', (request, response) => {
   const promise = id ? db.updateOs(id, os) : db.insertOs(os);
   console.log(id);
 
-   var text = ""
   
-
-   if(os.rastreio <= 1 ){
-    text = "Novo Pedido"
-   }else
-   text = "Número de Rastreio"
-   const mail= ""
-  
-  sendMail([os.email,mail], text, `
-    Pedido Para ${os.name}!
-   Produto: ${os.produto}  Quantidade ${os.qtd}     
-   Produto: ${os.produto2 ? `${os.produto2}  Quantidade ${os.qtd2}` : ''}
-   Produto: ${os.produto3 ? `${os.produto3}  Quantidade ${os.qtd3}` : ''}
-   Produto: ${os.produto4 ? `${os.produto4}  Quantidade ${os.qtd4}` : ''}
-   Produto: ${os.produto5 ? `${os.produto5}  Quantidade ${os.qtd5}` : ''}
-   Produto: ${os.rastreio ? `Número de Rastreio ${os.rastreio} ` : ''}
-   
-   Seu pedido está sendo separado, quando for postado você 
-   receberá uma atualização desse e-mail com o número de rastreio.
-   
-  
-    Sds
-  
-    
-  `);
   
   promise
     .then(result => {
@@ -178,7 +153,7 @@ router.post('/new', (request, response) => {
     })
     .catch(error => {
       console.log(error);
-      response.render("error", { message: "Não foi possível salvar o Pedido", error });
+      response.render("error", { message: "Não foi possível salvar a OS", error });
     });
 });
 
@@ -190,7 +165,7 @@ router.get('/:page?', async (req, res, next) => {
     const qty = await db.countOs();
     const pagesQty = Math.ceil(qty / db.PAGE_SIZE);
     const os = await db.findOss(page);
-    res.render("pedido", { title: "Pedidos", os, qty, pagesQty, page });
+    res.render("pedido", { title: "OS", os, qty, pagesQty, page });
     console.log(qty);
   } catch (error) {
     console.log(error);

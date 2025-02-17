@@ -1,8 +1,8 @@
 <%- include ("top.ejs") %>
 
 
-<div class="btn btn-primary mb-2">
-    <%= qty %> 
+
+ 
     
 </div>
 <div class="row mb-3">
@@ -18,13 +18,13 @@
   </div>
 
 <table class="table table-bordered table-striped table-hover">
-    <thead class="thead-dark">
+    <thead class="table-dark">
         <tr>
-            <th>Pedido</th>
+            <th>ID</th>
             <th>Nome</th>
             <th>Status</th>
             <th>Método de Envio</th>
-            <th>Última Alteração</th>
+            <th>OS</th>
             <th>Ações</th>
         </tr>
     </thead>
@@ -33,11 +33,11 @@
             <tr>
                 <td><a href="/os/edit/<%= item._id %>"><%= item._id %></a></td>
                 <td><%= item.name %></td>
-                <td style="<%= item.status === 'Pedido Gerado' ? 'background-color: yellow;' : (item.status === 'Pedido Enviado' ? 'background-color: green;' : '') %>"><%= item.status %></td>
+                <td style="<%= item.status === 'Aguardando Análise' ? 'background-color: yellow;' : (item.status === 'Enviado' ? 'background-color: green;' : '') %>"><%= item.status %></td>
 
                 
                 <td><%= item.metodo_envio %></td>
-                <td><%= item.alterado_by %></td>
+                <td><%= item.fornecedor %></td>
                 <td>
                     <center>
                         <a href="/os/delete/<%= item._id %>" title="Excluir" class="btn btn-danger" onclick="return confirm('Tem certeza que deseja excluir esse cliente?')">
