@@ -17,7 +17,8 @@ var customersRouter = require('./routes/customers');
 var buscaRouter = require("./routes/busca");
 var osRouter = require("./routes/os");
 var speechRouter = require("./routes/speech");
-var editspeechEditorRouter = require("./routes/editspeechEditor")
+var editspeechEditorRouter = require("./routes/editspeechEditor");
+var autoTextRouter = require("./routes/autotext")
 
 
 
@@ -61,6 +62,7 @@ app.use('/users', authorizationMiddleware, usersRouter);
 app.use('/customers', authorizationMiddleware, customersRouter);
 app.use('/os', authorizationMiddleware, osRouter);
 app.use('/busca', buscaRouter);
+app.use('/', authorizationMiddleware, autoTextRouter)
 
 
 

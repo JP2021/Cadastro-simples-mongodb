@@ -1,423 +1,176 @@
-<%- include ("top.ejs") %>
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt">
 <head>
-    <style>
-        #fontSizeSelect {
-            height: 2rem; /* ajuste conforme necessário */
-        }
-    </style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="style.css">
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <title>Voice Editor</title>
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link type="text/css" href="./css/volt.css" rel="stylesheet">
+    <script src="./vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+    <style>
+        .botao-sem-borda { border: none; background: none; cursor: pointer; }
+        .sidebar { width: 250px; position: fixed; top: 0; left: 0; height: 100vh; background-color: #2d3748; color: white; padding: 1rem; }
+        .sidebar-text { margin-left: 0.5rem; }
+        .sidebar-icon svg { width: 20px; height: 20px; }
+        #main-content { margin-left: 250px; padding: 20px; }
+        #editor { border: 1px solid #ccc; border-radius: 4px; }
+        #toggle-documents-btn { background-color: #f8f9fa !important; color: #000 !important; }
+        .oculto { color: gray; font-style: italic; }
+        .visivel { color: rgb(245, 230, 16); font-weight: bold; }
+        #modal-editor { height: 400px; margin-bottom: 20px; }
+    </style>
 </head>
 <body>
-    <div class="container-fluid">
-        <div class="row">
-            <nav class="col-md-2 d-none d-md-block bg-light sidebar">
-                <div class="sidebar-sticky">
-                    <ul class="nav flex-column"></ul>
-                    <div id="document-list">
-                        <h6>Documentos Cadastrados</h6>
-                        <ul class="list-group" id="documents-ul"></ul>
-                    </div>
-                </div>
-            </nav>
+    <nav id="sidebarMenu" class="sidebar">
+        <ul class="nav flex-column pt-3 pt-md-0">
+            <li class="nav-item active">
+                <a href="#" class="nav-link">
+                    <span class="sidebar-icon">
+                        <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z"></path>
+                            <path d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z"></path>
+                        </svg>
+                    </span>
+                    <span class="sidebar-text">Speech Editor</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" id="mascaras-link" class="nav-link">
+                    <span class="sidebar-icon">
+                        <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M5 4a3 3 0 00-3 3v6a3 3 0 003 3h10a3 3 0 003-3V7a3 3 0 00-3-3H5zm-1 9v-1h5v2H5a1 1 0 01-1-1zm7 1h4a1 1 0 001-1v-1h-5v2zm0-4h5V8h-5v2zM9 8H4v2h5V8z" clip-rule="evenodd"></path>
+                        </svg>
+                    </span>
+                    <span class="sidebar-text">Máscaras</span>
+                </a>
+                <a href="#" class="nav-link">
+                    <span>
+                        <span class="sidebar-icon">
+                          <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"></path></svg>
+                        </span>
+                        <span class="sidebar-text">Configurações</span>
+                      </span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <h6 class="sidebar-text" id="document-list-title">Auto Texto</h6>
+                <button id="toggle-documents-btn" class="btn btn-light btn-sm mb-2">Mostrar</button>
+                <ul class="list-group" id="documents-ul" style="display: none;"></ul>
+            </li>
+        </ul>
+    </nav>
 
-            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4" id="main-content">
-                <!-- Página do Editor -->
-                <div id="editor-page" class="page">
-                    <div class="toolbar btn-group mb-2">
-                        <button type="button" class="btn btn-light" data-command="bold"><b>B</b></button>
-                        <button type="button" class="btn btn-light" data-command="italic"><i>I</i></button>
-                        <button type="button" class="btn btn-light" data-command="underline"><u>U</u></button>
-                        <button type="button" class="btn btn-light" data-command="insertUnorderedList">&#8226; Lista</button>
-                        <button type="button" class="btn btn-light" data-command="insertOrderedList">1. Lista</button>
-                        <button type="button" class="btn btn-light" data-command="justifyLeft">&#9664;</button>
-                        <button type="button" class="btn btn-light" data-command="justifyCenter">&#9672;</button>
-                        <button type="button" class="btn btn-light" data-command="justifyRight">&#9654;</button>
-                        <select id="fontSizeSelect" class="form-select form-select-sm ms-2">
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3" selected>3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
-                            <option value="6">6</option>
-                            <option value="7">7</option>
-                        </select>
-                    </div><br>
-                    <button id="start-record-btn" class="btn btn-danger mt-2">Iniciar Gravação</button>
-                    <button id="stop-record-btn" class="btn btn-primary mt-2">Parar Gravação</button>
-                    <button id="cadastro-link" class="btn btn-primary mt-2">Cadastrar Documento</button>
-                    <input type="submit" value="Logout" class="btn btn-secondary mt-2"/>
-                    <div id="text-editor" class="form-control mt-3" contenteditable="true" style="height: 500px; overflow-y: auto;"></div>
-                </div>
-
-                <!-- Página de Cadastro -->
-                <div id="cadastro-page" class="page" style="display: none;">
-                    <h2>Cadastro de Documentos</h2>
-                    <form id="cadastro-form">
-                        <div class="form-group">
-                            <label for="document-name">Nome do Documento</label>
-                            <input type="text" class="form-control" id="document-name" required>
-                        </div>
-                        <select id="fontSizeSelect2" class="form-select form-select-sm ms-2">
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3" selected>3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
-                            <option value="6">6</option>
-                            <option value="7">7</option>
-                        </select>
-                        <div class="form-group">
-                            <label for="document-content">Conteúdo do Documento</label>
-                            <div class="toolbar btn-group mb-2">
-                                <button type="button" class="btn btn-light" data-command="bold"><b>B</b></button>
-                                <button type="button" class="btn btn-light" data-command="italic"><i>I</i></button>
-                                <button type="button" class="btn btn-light" data-command="underline"><u>U</u></button>
-                                <button type="button" class="btn btn-light" data-command="insertUnorderedList">&#8226; Lista</button>
-                                <button type="button" class="btn btn-light" data-command="insertOrderedList">1. Lista</button>
-                                <button type="button" class="btn btn-light" data-command="justifyLeft">&#9664;</button>
-                                <button type="button" class="btn btn-light" data-command="justifyCenter">&#9672;</button>
-                                <button type="button" class="btn btn-light" data-command="justifyRight">&#9654;</button>
-                                <button id="editor-link" class="btn btn-primary btn-sm mr-2 mt-2">Voltar para o Editor</button>
-                                <a href="/edit">
-                                    <button id="view-documents-btn" class="btn btn-primary btn-sm mt-2">Ver Documentos</button>
-                                </a>
-                            </div>
-                            <div id="cadastro-text-editor" class="form-control" contenteditable="true" style="height: 500px; overflow-y: auto;"></div>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Cadastrar</button>
-                    </form>
-                </div>
-            </main>
+    <main id="main-content">
+        <div style="display: flex; gap: 10px;">
+            <div style="margin-bottom: 20px;">
+                <button id="record-btn" class="botao-sem-borda">
+                    <img src="./assets/img/icone.png" alt="Ícone" width="30">
+                </button>
+            </div>
+            <div style="margin-bottom: 20px;">
+                <button id="change-color" class="botao-sem-borda">
+                    <img src="./assets/img/pincel.png" alt="Ícone" width="30">
+                </button>
+            </div>
+            <div style="margin-bottom: 20px;">
+                <button id="btnCorrigir" onclick="toggleCorrigir()" class="botao-sem-borda">
+                    <img src="./assets/img/d-on.png" alt="Ícone" width="30">
+                </button>
+            </div>
+            <div style="margin-bottom: 20px;">
+                <button id="btnInserir" onclick="toggleInserir()" class="botao-sem-borda">
+                    <img src="./assets/img/cdr-tex-ont.png" alt="Ícone" width="30">
+                </button>
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+                <div id="button-container"></div>
+                <button id="simulate-auto-texto" class="botao-sem-borda">Simular Auto Texto</button>
+            </div>
         </div>
-    </div>
+        <input type="color" id="color-picker" style="display: none;" />
+        <div id="editor" style="height: 600px; margin-top: 10px;"></div>
+    </main>
 
-    <!-- Modal de Edição de Documento -->
-    <div class="modal fade" id="editDocumentModal" tabindex="-1" role="dialog" aria-labelledby="editDocumentModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
+    <div class="modal fade" id="autoTextoModal" tabindex="-1" aria-labelledby="autoTextoModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="editDocumentModalLabel">Editar Documento</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                    <h5 class="modal-title" id="autoTextoModalLabel">Cadastrar/Editar Auto Texto</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="edit-document-form">
-                        <div class="form-group">
-                            <label for="edit-document-name">Nome do Documento</label>
-                            <input type="text" class="form-control" id="edit-document-name" required>
+                    <form id="autoTextoForm">
+                        <div class="mb-3">
+                            <label for="documentName" class="form-label">Nome do Documento</label>
+                            <input type="text" class="form-control" id="documentName" required>
                         </div>
-                        <select id="fontSizeSelect3" class="form-select form-select-sm ms-2">
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3" selected>3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
-                            <option value="6">6</option>
-                            <option value="7">7</option>
-                        </select>
-                        <div class="form-group">
-                            <label for="edit-document-content">Conteúdo do Documento</label>
-                            <div class="toolbar btn-group mb-2">
-                                <button type="button" class="btn btn-light" data-command="bold"><b>B</b></button>
-                                <button type="button" class="btn btn-light" data-command="italic"><i>I</i></button>
-                                <button type="button" class="btn btn-light" data-command="underline"><u>U</u></button>
-                                <button type="button" class="btn btn-light" data-command="insertUnorderedList">&#8226; Lista</button>
-                                <button type="button" class="btn btn-light" data-command="insertOrderedList">1. Lista</button>
-                                <button type="button" class="btn btn-light" data-command="justifyLeft">&#9664;</button>
-                                <button type="button" class="btn btn-light" data-command="justifyCenter">&#9672;</button>
-                                <button type="button" class="btn btn-light" data-command="justifyRight">&#9654;</button>
-                            </div>
-                            <div id="edit-text-editor" class="form-control" contenteditable="true" style="height: 500px; overflow-y: auto;"></div>
+                        <div class="mb-3">
+                            <label for="modal-editor" class="form-label">Conteúdo</label>
+                            <div id="modal-editor"></div>
                         </div>
-                        <button type="submit" class="btn btn-primary">Salvar Edição</button>
                     </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Voltar</button>
+                    <button type="button" class="btn btn-primary" id="saveDocumentBtn">Salvar</button>
+                    <button type="button" class="btn btn-danger" id="deleteDocumentBtn" style="display: none;">Excluir</button>
                 </div>
             </div>
         </div>
     </div>
 
+    <script src="./js/wordReplacements.js"></script>
+    <script src="./js/engine.js"></script>
+
     <script>
-        // Função para formatar texto
-        function formatText(command, value = null) {
-            document.execCommand(command, false, value);
+      
+        // Função para abrir o modal e carregar dados (se for edição)
+        function openAutoTextoModal(id = null) {
+            if (id) {
+                // Carregar dados existentes para edição
+                fetch(`/autotext/${id}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById('documentName').value = data.name;
+                        modalQuill.root.innerHTML = data.content;
+                        document.getElementById('deleteDocumentBtn').style.display = 'inline-block';
+                    });
+            } else {
+                // Limpar o modal para um novo auto texto
+                document.getElementById('documentName').value = '';
+                modalQuill.root.innerHTML = '';
+                document.getElementById('deleteDocumentBtn').style.display = 'none';
+            }
+
+            // Abrir o modal
+            new bootstrap.Modal(document.getElementById('autoTextoModal')).show();
         }
 
-        $(document).ready(function() {
-            // Função para alternar entre as páginas
-            function showPage(pageId) {
-                if (pageId === 'editor-page') {
-                    $('#editor-page').show();
-                    $('#cadastro-page').hide();
-                } else if (pageId === 'cadastro-page') {
-                    $('#editor-page').hide();
-                    $('#cadastro-page').show();
-                }
-            }
+       
 
-            // Alternância entre páginas
-            $('#editor-link').on('click', function() {
-                showPage('editor-page');
-            });
-
-            $('#cadastro-link').on('click', function() {
-                showPage('cadastro-page');
-            });
-
-            // Armazenamento e recuperação de documentos no localStorage
-            let documents = JSON.parse(localStorage.getItem('documents')) || {};
-
-            // Atualiza a lista de documentos cadastrados na barra lateral
-            function updateDocumentList() {
-                const documentList = $('#documents-ul');
-                documentList.empty();
-                for (const docName in documents) {
-                    const listItem = $(`<li class="list-group-item">${docName}</li>`);
-
-                    // Permite clicar para carregar o conteúdo no editor
-                    listItem.on('click', function() {
-                        showPage('editor-page');
-                        $('#text-editor').html(documents[docName]); // Carrega o conteúdo formatado
+        // Função para carregar a lista de auto textos
+        function loadAutoTextos() {
+            fetch('/autotext')
+                .then(response => response.json())
+                .then(data => {
+                    const documentsUl = document.getElementById('documents-ul');
+                    documentsUl.innerHTML = '';
+                    data.forEach(item => {
+                        const li = document.createElement('li');
+                        li.className = 'list-group-item';
+                        li.textContent = item.name;
+                        li.addEventListener('click', () => openAutoTextoModal(item._id));
+                        documentsUl.appendChild(li);
                     });
-
-                    documentList.append(listItem);
-                }
-            }
-
-            // Cadastro de novos documentos
-            $('#cadastro-form').on('submit', function(event) {
-                event.preventDefault();
-                const name = normalizeText($('#document-name').val());
-                const content = $('#cadastro-text-editor').html(); // Pega o conteúdo formatado
-
-                if (name && content) {
-                    documents[name] = content;
-                    localStorage.setItem('documents', JSON.stringify(documents));
-                    alert('Documento cadastrado com sucesso!');
-                    $('#cadastro-form')[0].reset();
-                    $('#cadastro-text-editor').html(''); // Limpa o editor
-                    updateDocumentList();
-                    showPage('editor-page'); // Volta para a página do editor após o cadastro
-                } else {
-                    alert('Preencha todos os campos.');
-                }
-            });
-
-            // Normaliza o texto (remove acentos e caracteres especiais)
-            function normalizeText(text) {
-                return text
-                    .toLowerCase()
-                    .trim()
-                    .normalize('NFD')
-                    .replace(/[\u0300-\u036f]/g, '')
-                    .replace(/[.,]/g, '')
-                    .replace(/\s+/g, ' ');
-            }
-
-            // Funcionalidade de reconhecimento de voz
-            let recognition;
-            if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
-                recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-                recognition.continuous = false; // Alterado para false para reiniciar após cada transcrição
-                recognition.interimResults = false;
-                recognition.lang = "pt-BR";
-
-                recognition.onstart = function() {
-                    console.log("Reconhecimento de voz iniciado.");
-                };
-
-                recognition.onresult = function(event) {
-                    const transcript = normalizeText(event.results[event.resultIndex][0].transcript);
-                    console.log("Transcrição: " + transcript);
-
-                    // Obtém o editor de texto
-                    const editor = $('#text-editor')[0];
-
-                    // Verifica se o editor está em foco
-                    if (document.activeElement === editor) {
-                        // Comando "ponto parágrafo"
-                        if (transcript.includes("ponto paragrafo")) {
-                            insertHTMLAtCursor(".<br><br>"); // Insere um ponto seguido de dois parágrafos
-                            return;
-                        }
-
-                        // Regex para identificar "auto texto" seguido do nome do documento
-                        const match = transcript.match(/^auto\s*texto\s*([\w\s]+)/);
-
-                        if (match) {
-                            const docName = normalizeText(match[1]);
-                            console.log(`Procurando documento: "${docName}"`);
-
-                            // Verificar se o nome corresponde a algum item da lista
-                            const documentListItems = $('#documents-ul li');
-                            let found = false;
-
-                            documentListItems.each(function() {
-                                const listItemName = normalizeText($(this).text());
-                                console.log(`Comparando: "${listItemName}" com "${docName}"`);
-
-                                if (listItemName === docName) {
-                                    $('#editor-page').show();
-                                    $('#cadastro-page').hide();
-                                    const content = documents[listItemName];
-                                    insertHTMLAtCursor(content); // Insere o conteúdo formatado
-                                    console.log(`Documento "${listItemName}" carregado com sucesso.`);
-                                    found = true;
-                                    return false; // Interrompe o loop
-                                }
-                            });
-
-                            if (!found) {
-                                console.log(`Documento "${docName}" não encontrado.`);
-                            }
-                        } else {
-                            // Caso contrário, adicionar a transcrição normal ao editor
-                            insertTextAtCursor(transcript + ' ');
-                        }
-                    }
-                };
-
-                recognition.onerror = function(event) {
-                    console.error("Erro no reconhecimento: ", event.error);
-                };
-
-                recognition.onend = function() {
-                    console.log("Reconhecimento de voz finalizado.");
-                    // Reinicia o reconhecimento após o término
-                    if ($('#start-record-btn').hasClass('active')) {
-                        recognition.start();
-                    }
-                };
-
-                $('#start-record-btn').on('click', function() {
-                    $(this).addClass('active');
-                    recognition.start();
                 });
+        }
 
-                $('#stop-record-btn').on('click', function() {
-                    $('#start-record-btn').removeClass('active');
-                    recognition.stop();
-                });
-            } else {
-                alert('Reconhecimento de voz não suportado neste navegador.');
-            }
-
-            // Função para inserir texto na posição do cursor
-            function insertTextAtCursor(text) {
-                const editor = $('#text-editor')[0];
-                const selection = window.getSelection();
-
-                if (selection.rangeCount > 0) {
-                    const range = selection.getRangeAt(0);
-                    range.deleteContents(); // Remove qualquer texto selecionado
-                    const textNode = document.createTextNode(text);
-                    range.insertNode(textNode);
-
-                    // Move o cursor para após o texto inserido
-                    range.setStartAfter(textNode);
-                    range.setEndAfter(textNode);
-                    selection.removeAllRanges();
-                    selection.addRange(range);
-
-                    // Mantém o foco no editor
-                    editor.focus();
-                } else {
-                    // Se não houver seleção, insere no final do editor
-                    editor.innerHTML += text;
-                    editor.focus();
-                }
-            }
-
-            // Função para inserir HTML na posição do cursor
-            function insertHTMLAtCursor(html) {
-                const editor = $('#text-editor')[0];
-                const selection = window.getSelection();
-
-                if (selection.rangeCount > 0) {
-                    const range = selection.getRangeAt(0);
-                    range.deleteContents(); // Remove qualquer texto selecionado
-
-                    // Cria um elemento temporário para inserir o HTML
-                    const tempDiv = document.createElement('div');
-                    tempDiv.innerHTML = html;
-                    const fragment = document.createDocumentFragment();
-
-                    while (tempDiv.firstChild) {
-                        fragment.appendChild(tempDiv.firstChild);
-                    }
-
-                    range.insertNode(fragment);
-
-                    // Move o cursor para após o conteúdo inserido
-                    range.setStartAfter(fragment.lastChild);
-                    range.setEndAfter(fragment.lastChild);
-                    selection.removeAllRanges();
-                    selection.addRange(range);
-
-                    // Mantém o foco no editor
-                    editor.focus();
-                } else {
-                    // Se não houver seleção, insere no final do editor
-                    editor.innerHTML += html;
-                    editor.focus();
-                }
-            }
-
-            // Carrega a lista de documentos ao iniciar a página
-            updateDocumentList();
-
-            // Adiciona eventos de formatação aos botões
-            $('.toolbar button').on('click', function() {
-                const command = $(this).data('command');
-                formatText(command);
-            });
-        });
-
-        // Event listeners para alterar o tamanho da fonte
-        document.getElementById('fontSizeSelect').addEventListener('change', function() {
-            const size = this.value;
-            document.execCommand('fontSize', false, size);
-        });
-
-        document.getElementById('fontSizeSelect2').addEventListener('change', function() {
-            const size = this.value;
-            document.execCommand('fontSize', false, size);
-        });
-
-        document.getElementById('fontSizeSelect3').addEventListener('change', function() {
-            const size = this.value;
-            document.execCommand('fontSize', false, size);
-        });
-
-        // Atalhos de teclado
-        document.addEventListener('keydown', function(event) {
-            if (event.ctrlKey && event.key.toLowerCase() === 'e') {
-                event.preventDefault();
-                document.getElementById('start-record-btn').click();
-            }
-
-            if (event.ctrlKey && event.key.toLowerCase() === 'k') {
-                event.preventDefault();
-                document.getElementById('stop-record-btn').click();
-            }
-        });
-
-        // Redirecionamento para a página de edição
-        document.getElementById('view-documents-btn').addEventListener('click', function() {
-            window.location.href = '/edit';
-        });
+        // Carregar a lista de auto textos ao abrir a página
+        loadAutoTextos();
     </script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-
-<%- include("bottom.ejs") %>

@@ -163,6 +163,73 @@ async function deleteUser(id) {
     return conn.collection("users").deleteOne({ _id: objectId });
 }
 
+// Exemplo de funções no db
+
+async function insertAutoText(autoText) {
+    const connection = await connect();
+    return connection.collection("autotexts").insertOne(autoText);
+  }
+  
+  async function updateAutoText(id, autoText, userId) {
+    const connection = await connect();
+    return connection.collection("autotexts").updateOne(
+      { _id: new ObjectId(id), userId: userId },
+      { $set: autoText }
+    );
+  }
+  
+  async function deleteAutoText(id, userId) {
+    const connection = await connect();
+    return connection.collection("autotexts").deleteOne({ _id: new ObjectId(id), userId: userId });
+  }
+  async function findAutoTextsByUserId(userId) {
+    const connection = await connect();
+    return connection.collection("autotexts").find({ userId: userId }).toArray();
+}
+
+async function findAutoTextById(id, userId) {
+    try {
+        console.log(`Buscando auto texto pelo ID: ${id}, userId: ${userId}`); // Log para depuração
+
+        // Valida se o ID é uma string válida de 24 caracteres hexadecimais
+        if (!id || typeof id !== 'string' || id.length !== 24 || !/^[0-9a-fA-F]{24}$/.test(id)) {
+            throw new Error('ID inválido');
+        }
+
+        // Conecta ao banco de dados
+        const connection = await connect();
+
+        // Converte o ID para ObjectId
+        const objectId = new ObjectId(id);
+
+        // Busca o auto texto pelo ID e pelo ID do usuário
+        const autoText = await connection.collection('autotexts').findOne({
+            _id: objectId,
+            userId: userId
+        });
+
+        console.log('Auto texto encontrado:', autoText); // Log para depuração
+        return autoText;
+    } catch (error) {
+        console.error('Erro na função findAutoTextById:', error); // Log para depuração
+        throw error;
+    }
+}
+
+async function findAutoTextByName(name, userId) {
+    try {
+        const db = await connect(); // Conecta ao banco de dados
+        const autoText = await db.collection('autotexts').findOne({
+            name: { $regex: new RegExp(`^${name}$`, 'i') }, // Busca insensível a maiúsculas/minúsculas
+            userId: userId // Garante que o auto texto pertence ao usuário
+        });
+        return autoText;
+    } catch (error) {
+        console.error('Erro na função findAutoTextByName:', error);
+        throw error;
+    }
+}
+
 module.exports = {
     PAGE_SIZE,
     connect,
@@ -188,5 +255,11 @@ module.exports = {
     findUser,
     insertUser,
     updateUser,
-    deleteUser
+    deleteUser,
+    insertAutoText,
+    updateAutoText,
+    deleteAutoText,
+    findAutoTextById,
+    findAutoTextsByUserId,
+    findAutoTextByName
 };
